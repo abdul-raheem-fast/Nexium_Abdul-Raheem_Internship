@@ -21,6 +21,7 @@ import {
   Linkedin,
   Mail
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   const stats = [
@@ -81,6 +82,23 @@ export default function Home() {
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-2">Welcome back, Abdul Raheem! 👋</h2>
           <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your projects today.</p>
+          
+          {/* Quote Generator CTA */}
+          <div className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold mb-2 flex items-center">
+                  ✨ Assignment 1: Quote Generator
+                </h3>
+                <p className="text-muted-foreground text-sm">
+                  Generate inspiring quotes from famous personalities across different categories.
+                </p>
+              </div>
+              <Button asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                <Link href="/quote-generator">Launch Quote Generator</Link>
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Grid */}
