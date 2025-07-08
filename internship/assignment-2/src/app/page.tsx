@@ -15,10 +15,18 @@ import {
   Sparkles
 } from "lucide-react";
 
+interface BlogResult {
+  url: string;
+  title: string;
+  summary: string;
+  urduSummary: string;
+  timestamp: string;
+}
+
 export default function BlogSummarizer() {
   const [blogUrl, setBlogUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<BlogResult | null>(null);
 
   const handleSummarize = async () => {
     if (!blogUrl.trim()) return;

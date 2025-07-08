@@ -3,17 +3,24 @@
 import { createClient } from '@supabase/supabase-js';
 import { MongoClient } from 'mongodb';
 
-// Supabase Configuration
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Environment variable validation
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const mongoUri = process.env.MONGODB_URI;
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Create Supabase client only if environment variables are available
+export const supabase = supabaseUrl && supabaseKey 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 // MongoDB Configuration
-const mongoUri = process.env.MONGODB_URI!;
 let cachedClient: MongoClient | null = null;
 
 export async function connectToMongoDB(): Promise<MongoClient> {
+  if (!mongoUri) {
+    throw new Error('MONGODB_URI environment variable is not set');
+  }
+
   if (cachedClient) {
     return cachedClient;
   }
@@ -55,6 +62,10 @@ export interface BlogContent {
 
 // Supabase Operations (for summaries)
 export async function saveSummaryToSupabase(summary: Omit<BlogSummary, 'id' | 'created_at'>) {
+  if (!supabase) {
+    throw new Error('Supabase client not initialized. Check environment variables.');
+  }
+
   const { data, error } = await supabase
     .from('blog_summaries')
     .insert(summary)
@@ -70,6 +81,10 @@ export async function saveSummaryToSupabase(summary: Omit<BlogSummary, 'id' | 'c
 }
 
 export async function getSummariesFromSupabase(limit = 10) {
+  if (!supabase) {
+    throw new Error('Supabase client not initialized. Check environment variables.');
+  }
+
   const { data, error } = await supabase
     .from('blog_summaries')
     .select('*')
