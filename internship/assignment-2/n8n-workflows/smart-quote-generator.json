@@ -1,0 +1,258 @@
+{
+  "name": "Smart Quote Generator - Nexium",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "quote-request",
+        "options": {
+          "noResponseBody": false
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Quote Request Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "nexium-quote-generator"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "category",
+              "value": "={{ $json.body.category || 'motivation' }}"
+            },
+            {
+              "name": "count",
+              "value": "={{ $json.body.count || 3 }}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{ $json.body.user_id || 'anonymous' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-params",
+      "name": "Extract Parameters",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nexium-muhammad-abdul-raheem-khan-assign2.vercel.app/api/webhook/quotes",
+        "options": {
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "trigger": "generate_quotes",
+            "category": "={{ $json.category }}",
+            "count": "={{ $json.count }}"
+          }
+        }
+      },
+      "id": "generate-quotes",
+      "name": "Generate Quotes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "leftValue": "={{ $json.success }}",
+            "operation": "equal",
+            "rightValue": true
+          }
+        }
+      },
+      "id": "success-check",
+      "name": "Check Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "response_message",
+              "value": "🎯 **{{ $json.data.quotes.length }} Quotes Generated**\n\nCategory: {{ $json.data.category }}\nUser: {{ $('Extract Parameters').item.json.user_id }}\n\n{{ $json.data.quotes.map(q => `📝 \"${q.text}\" - ${q.author}`).join('\\n\\n') }}\n\n✨ Generated via n8n automation"
+            },
+            {
+              "name": "success",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-success",
+      "name": "Format Success Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "response_message",
+              "value": "❌ **Quote Generation Failed**\n\nUser: {{ $('Extract Parameters').item.json.user_id }}\nCategory: {{ $('Extract Parameters').item.json.category }}\nError: {{ $json.message || 'Unknown error' }}\n\nPlease try again or contact support."
+            },
+            {
+              "name": "success",
+              "value": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-error",
+      "name": "Format Error Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "authentication": "generic",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "url": "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK",
+        "options": {
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "content": "={{ $json.response_message }}",
+            "username": "Nexium Quote Bot",
+            "avatar_url": "https://your-app.vercel.app/logo.png"
+          }
+        }
+      },
+      "id": "send-to-discord",
+      "name": "Send to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": $json.success, \"message\": $json.response_message, \"timestamp\": new Date().toISOString() } }}"
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Quote Request Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Parameters": {
+      "main": [
+        [
+          {
+            "node": "Generate Quotes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Quotes": {
+      "main": [
+        [
+          {
+            "node": "Check Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Success": {
+      "main": [
+        [
+          {
+            "node": "Format Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Success Response": {
+      "main": [
+        [
+          {
+            "node": "Send to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Error Response": {
+      "main": [
+        [
+          {
+            "node": "Send to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Discord": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-15T12:00:00.000Z",
+  "updatedAt": "2024-01-15T12:00:00.000Z",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "1"
+} 
