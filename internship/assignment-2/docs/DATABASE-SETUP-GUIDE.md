@@ -64,7 +64,7 @@ CREATE POLICY "Allow public access" ON summaries
 
 ```bash
 # MongoDB Configuration
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/nexium_assignment2?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/nexium_assignment2?retryWrites=true&w=majority
 ```
 
 **Step 2: Network Access Configuration**
@@ -129,7 +129,7 @@ In your Vercel dashboard, add these environment variables:
 # Database
 SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_ANON_KEY=your_anon_key_here
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/nexium_assignment2
+MONGODB_URI=mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/nexium_assignment2
 
 # Security
 WEBHOOK_SECRET=your-secure-secret-key
