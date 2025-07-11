@@ -76,9 +76,14 @@ export default function HomePage() {
                 🔗 Webhook Dashboard
               </Button>
             </Link>
+            <Link href="/analytics">
+              <Button variant="outline" className="flex items-center gap-2">
+                📊 Analytics Dashboard
+              </Button>
+            </Link>
             <Link href="/api/webhook/quotes" target="_blank">
               <Button variant="outline" className="flex items-center gap-2">
-                📚 API Docs
+                📚 API Documentation
               </Button>
             </Link>
           </div>
