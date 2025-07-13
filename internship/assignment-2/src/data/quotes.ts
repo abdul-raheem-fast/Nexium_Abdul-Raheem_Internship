@@ -1,4 +1,4 @@
-// Day 8: Quote Database for n8n Webhook Integration
+// Quote Database for n8n Webhook Integration
 export interface Quote {
   id: string;
   text: string;

@@ -1,4 +1,4 @@
-// Day 8: Enhanced n8n Webhook Integration - Quote Automation
+// Enhanced n8n Webhook Integration - Quote Automation
 import { NextRequest, NextResponse } from 'next/server';
 import { quotes, getRandomQuotes, getCategoryById } from '@/data/quotes';
 import { MongoService, type WebhookActivity } from '@/lib/database';
@@ -167,11 +167,11 @@ export async function POST(request: NextRequest) {
         
         const quotesData = generateQuotesWithMetadata(count, category, format);
 
-        response.data = {
+          response.data = {
           quotes: quotesData,
-          metadata: {
+            metadata: {
             category: category === 'all' ? 'Mixed Categories' : getCategoryById(category)?.name || category,
-            total_available: category === 'all' ? quotes.length : quotes.filter(q => q.category === category).length,
+              total_available: category === 'all' ? quotes.length : quotes.filter(q => q.category === category).length,
             generated_count: quotesData.length,
             format_type: format,
             generation_method: 'smart_selection'
@@ -181,8 +181,8 @@ export async function POST(request: NextRequest) {
             csv_export: true,
             formatted_text: true,
             social_media_ready: format === 'detailed'
-          }
-        };
+            }
+          };
         
         response.message = `Successfully generated ${quotesData.length} ${format} quotes from ${category} category`;
         break;
@@ -261,7 +261,7 @@ export async function POST(request: NextRequest) {
         else recommendedCategory = 'wisdom';
         
         const recommendedQuotes = getRandomQuotes(3, recommendedCategory);
-        
+
         response.data = {
           recommended_quotes: recommendedQuotes.map(q => ({
             ...q,
@@ -433,7 +433,7 @@ export async function GET() {
         'Time-based recommendations'
       ]
     },
-    endpoints: {
+      endpoints: {
       POST: {
         url: '/api/webhook/quotes',
         description: 'Main webhook endpoint for all quote operations',
@@ -462,9 +462,9 @@ export async function GET() {
           format: 'detailed',
           automation_id: 'morning_motivation'
         }
-      },
-      {
-        trigger: 'daily_inspiration',
+        },
+        {
+          trigger: 'daily_inspiration',
         description: 'Get daily inspiration with multiple format options',
         parameters: {
           delivery_method: 'string (optional) - "email", "slack", "json"'

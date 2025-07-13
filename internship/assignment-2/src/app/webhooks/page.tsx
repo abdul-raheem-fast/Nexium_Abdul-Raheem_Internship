@@ -1,6 +1,6 @@
 'use client';
 
-// Day 8: n8n Webhook Testing Dashboard
+// n8n Webhook Testing Dashboard
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -125,7 +125,7 @@ export default function WebhookDashboard() {
       <div className="container mx-auto p-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-            🔗 Day 8: n8n Webhook Dashboard
+            🔗 n8n Webhook Dashboard
           </h1>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
             Test and monitor webhook integrations for automation workflows

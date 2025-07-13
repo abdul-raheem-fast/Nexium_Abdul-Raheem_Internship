@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     default: "Nexium Blog Summarizer & Webhook System",
-    template: "%s | Nexium Assignment 2"
+    template: "%s | Nexium Blog Summarizer"
   },
   description: "Advanced AI-powered blog summarization with n8n webhook integration. Built by Abdul Raheem Khan for Nexium Internship Program.",
   keywords: [
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Nexium Blog Summarizer - Assignment 2',
+        alt: 'Nexium Blog Summarizer Platform',
       },
     ],
   },
@@ -65,9 +65,9 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
   },
   verification: {
     google: 'your-google-verification-code',
@@ -154,20 +154,22 @@ export default function RootLayout({
         
         {/* Global error boundary will be handled by Next.js error.tsx */}
         <main id="main-content" className="min-h-screen">
-          {children}
+        {children}
         </main>
+        
+
         
         {/* Footer with attribution */}
         <footer className="bg-gray-900 text-white py-8 mt-auto">
           <div className="container mx-auto px-4 text-center">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
-                <h3 className="text-xl font-bold mb-2">🚀 Nexium Assignment 2</h3>
+                <h3 className="text-xl font-bold mb-2">🚀 Nexium Blog Summarizer</h3>
                 <p className="text-gray-400">Advanced Blog Summarizer & Webhook System</p>
               </div>
               <div className="text-sm text-gray-400">
                 <p>Built with ❤️ by <strong className="text-white">Muhammad Abdul Raheem Khan</strong></p>
-                <p>Nexium Internship Program - Day 11 Complete</p>
+                <p>Nexium Internship Program - Enterprise Platform</p>
                 <div className="flex gap-4 mt-2 justify-center">
                   <span className="flex items-center gap-1">
                     <span className="w-2 h-2 bg-green-500 rounded-full"></span>

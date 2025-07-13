@@ -62,11 +62,11 @@ export default function HomePage() {
             Nexium Internship Projects
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-2">
-            Muhammad Abdul Raheem Khan - Day 8 Showcase
+            Muhammad Abdul Raheem Khan - Project Portfolio
           </p>
           <div className="flex justify-center gap-2 mb-6">
-            <Badge variant="secondary">Assignment 2: Blog Summarizer</Badge>
-            <Badge variant="outline">Day 8: n8n Webhooks</Badge>
+            <Badge variant="secondary">Blog Summarizer Platform</Badge>
+            <Badge variant="outline">n8n Webhook Integration</Badge>
           </div>
           
           {/* Quick Navigation */}
@@ -206,9 +206,9 @@ export default function HomePage() {
           </TabsContent>
 
           <TabsContent value="webhook-integration" className="space-y-8">
-            {/* Day 8 Webhook Showcase */}
+            {/* n8n Webhook Integration */}
             <div className="text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold mb-4">🔗 Day 8: n8n Webhook Integration</h2>
+              <h2 className="text-3xl font-bold mb-4">🔗 n8n Webhook Integration</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
                 Advanced automation workflows connecting Quote Generator with n8n platform
               </p>
@@ -320,7 +320,7 @@ export default function HomePage() {
             Built with Next.js 15, TypeScript, ShadCN UI, and Modern Web Technologies
           </p>
           <p className="text-gray-400 text-xs mt-1">
-            Nexium Internship • Day 8 Assignment • Muhammad Abdul Raheem Khan
+            Nexium Internship • Enterprise Project • Muhammad Abdul Raheem Khan
           </p>
         </div>
       </div>

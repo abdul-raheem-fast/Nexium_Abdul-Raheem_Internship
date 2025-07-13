@@ -1,4 +1,4 @@
-// Assignment 2: Blog Summarizer API
+// Blog Summarizer API
 import { NextRequest, NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import { 
