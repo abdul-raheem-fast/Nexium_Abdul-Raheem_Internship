@@ -174,7 +174,7 @@ export class SupabaseService {
             ['blog.example.com', 4],
             ['techcrunch.com', 3],
             ['hackernoon.com', 2]
-          ],
+          ] as [string, number][],
           recentActivity: [
             {
               id: 'demo-1',
@@ -238,7 +238,7 @@ export class SupabaseService {
           ['blog.example.com', 4],
           ['techcrunch.com', 3],
           ['hackernoon.com', 2]
-        ],
+        ] as [string, number][],
         recentActivity: [
           {
             id: 'demo-1',
