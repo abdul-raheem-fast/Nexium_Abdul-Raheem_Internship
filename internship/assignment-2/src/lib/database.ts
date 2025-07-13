@@ -210,9 +210,9 @@ export class SupabaseService {
         return acc;
       }, {} as Record<string, number>) || {};
 
-      const topDomains = Object.entries(domainStats)
+      const topDomains: [string, number][] = Object.entries(domainStats)
         .sort(([,a], [,b]) => b - a)
-        .slice(0, 5);
+        .slice(0, 5) as [string, number][];
 
       const recentActivity = summaries
         ?.sort((a, b) => new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime())
