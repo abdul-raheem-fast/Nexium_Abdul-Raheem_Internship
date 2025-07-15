@@ -518,9 +518,9 @@ For questions, issues, or collaboration:
 
 - **Developer**: Muhammad Abdul Raheem Khan
 - **Program**: Nexium Internship - Blog Summarizer Platform
-- **Email**: [your-email@example.com]
-- **LinkedIn**: [your-linkedin-profile]
-- **GitHub**: [your-github-profile]
+- **Email**: abdulraheemghauri@gmai.com
+- **LinkedIn**: https://www.linkedin.com/in/abdul-raheem-fast
+- **GitHub**: https://github.com/abdul-raheem-fast
 
 ## 📄 License
 
