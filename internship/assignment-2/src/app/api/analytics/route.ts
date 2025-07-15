@@ -64,18 +64,52 @@ export async function GET(request: NextRequest) {
     const timeRange = url.searchParams.get('range') || '7'; // days
     const includeDetails = url.searchParams.get('details') === 'true';
     
-    // Fetch all analytics data in parallel
-    const [
-      supabaseAnalytics,
-      webhookAnalytics,
-      contentAnalytics,
-      systemHealth
-    ] = await Promise.all([
+    // Fetch all analytics data with proper error handling
+    const results = await Promise.allSettled([
       SupabaseService.getAnalytics(),
       MongoService.getWebhookAnalytics(parseInt(timeRange)),
       MongoService.getContentAnalytics(),
       checkDatabaseHealth()
     ]);
+
+    // Extract data with fallbacks
+    const supabaseAnalytics = results[0].status === 'fulfilled' ? results[0].value : {
+      totalSummaries: 0,
+      totalWordCount: 0,
+      avgWordCount: 0,
+      topDomains: [] as [string, number][],
+      recentActivity: []
+    };
+
+    const webhookAnalytics = results[1].status === 'fulfilled' ? results[1].value : {
+      totalRequests: 0,
+      successfulRequests: 0,
+      failedRequests: 0,
+      successRate: 0,
+      avgProcessingTime: 0,
+      triggerStats: {},
+      hourlyStats: {},
+      recentActivities: []
+    };
+
+    const contentAnalytics = results[2].status === 'fulfilled' ? results[2].value : {
+      totalContent: 0,
+      totalWords: 0,
+      avgWords: 0,
+      domainStats: {},
+      processingStats: {
+        avgScrapeTime: 0,
+        avgSummaryTime: 0,
+        avgTranslationTime: 0
+      },
+      recentContent: []
+    };
+
+    const systemHealth = results[3].status === 'fulfilled' ? results[3].value : {
+      supabase: false,
+      mongodb: false,
+      timestamp: new Date().toISOString()
+    };
     
     // Calculate performance metrics
     const totalRequests = webhookAnalytics.totalRequests + supabaseAnalytics.totalSummaries;
