@@ -9,10 +9,10 @@
 ## 🚀 Live Deployments
 
 ### Assignment 1: Quote Generator Web App
-**Live Demo:** [View Assignment 1](https://your-assignment-1-url.vercel.app) *(Update with your deployment URL)*
+**Live Demo:** [View Assignment 1](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app)
 
 ### Assignment 2: Blog Summarizer & Analytics Platform  
-**Live Demo:** [View Assignment 2](https://your-assignment-2-url.vercel.app) *(Update with your deployment URL)*
+**Live Demo:** [View Assignment 2](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app)
 
 ---
 
