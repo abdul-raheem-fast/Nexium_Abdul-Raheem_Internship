@@ -51,8 +51,7 @@ export async function GET() {
         error: 'MongoDB URI environment variable not set' 
       };
     } else {
-      const client = await connectToMongoDB();
-      const db = client.db('blog-summarizer');
+      const db = await connectToMongoDB();
       await db.admin().ping();
       results.mongodb = { status: 'connected', error: null };
     }

@@ -19,7 +19,7 @@ export async function connectToMongoDB(): Promise<Db> {
   if (cachedDb) {
     return cachedDb;
   }
-  
+
   try {
     await mongoClient.connect();
     cachedDb = mongoClient.db('nexium-internship');
@@ -52,7 +52,7 @@ export interface BlogContent {
   title: string;
   full_content: string;
   metadata: {
-    scraped_at: Date;
+  scraped_at: Date;
     word_count: number;
     source_domain: string;
     content_length: number;
@@ -84,8 +84,8 @@ export class SupabaseService {
   // Save blog summary to Supabase
   static async saveBlogSummary(summary: BlogSummary): Promise<BlogSummary> {
     try {
-      const { data, error } = await supabase
-        .from('blog_summaries')
+  const { data, error } = await supabase
+    .from('blog_summaries')
         .insert([{
           url: summary.url,
           title: summary.title,
@@ -97,31 +97,31 @@ export class SupabaseService {
           processed_at: summary.processed_at,
           content_hash: summary.content_hash
         }])
-        .select()
-        .single();
+    .select()
+    .single();
 
-      if (error) {
+  if (error) {
         console.error('Supabase save error:', error);
         throw new Error(`Database save failed: ${error.message}`);
-      }
+  }
 
-      return data;
+  return data;
     } catch (error) {
       console.error('Supabase operation failed:', error);
       throw error;
-    }
+}
   }
 
   // Get recent summaries
   static async getRecentSummaries(limit: number = 10): Promise<BlogSummary[]> {
     try {
-      const { data, error } = await supabase
-        .from('blog_summaries')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(limit);
+  const { data, error } = await supabase
+    .from('blog_summaries')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
 
-      if (error) {
+  if (error) {
         console.error('Supabase fetch error:', error);
         throw new Error(`Database fetch failed: ${error.message}`);
       }
@@ -145,9 +145,9 @@ export class SupabaseService {
       if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
         console.error('Supabase check error:', error);
         throw new Error(`Database check failed: ${error.message}`);
-      }
+  }
 
-      return data;
+  return data;
     } catch (error) {
       console.error('URL check failed:', error);
       return null;
@@ -211,7 +211,7 @@ export class SupabaseService {
       }, {} as Record<string, number>) || {};
 
       const topDomains: [string, number][] = Object.entries(domainStats)
-        .sort(([,a], [,b]) => b - a)
+        .sort(([,a], [,b]) => (b as number) - (a as number))
         .slice(0, 5) as [string, number][];
 
       const recentActivity = summaries
@@ -275,7 +275,7 @@ export class MongoService {
       const db = await connectToMongoDB();
       const collection: Collection<BlogContent> = db.collection('blog_contents');
 
-      const result = await collection.insertOne(content);
+    const result = await collection.insertOne(content);
       
       return {
         ...content,
@@ -442,7 +442,7 @@ export class MongoService {
         processingStats,
         recentContent: contents.slice(-5)
       };
-    } catch (error) {
+  } catch (error) {
       console.log('⚠️  MongoDB temporarily unavailable, using fallback content analytics');
       // Return realistic fallback data
       return {

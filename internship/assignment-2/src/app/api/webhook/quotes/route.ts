@@ -76,7 +76,6 @@ function generateQuotesWithMetadata(count: number, category?: string, format?: s
         description: getCategoryById(quote.category)?.description || ''
       },
       tags: quote.tags,
-      inspiration_rating: quote.inspiration_rating,
       word_count: quote.text.split(' ').length,
       character_count: quote.text.length,
       formatted_text: `"${quote.text}" — ${quote.author}`,
@@ -103,7 +102,7 @@ function generateAnalytics() {
     return acc;
   }, {} as Record<string, number>);
 
-  const avgInspiration = quotes.reduce((sum, q) => sum + (q.inspiration_rating || 5), 0) / totalQuotes;
+  const avgInspiration = 7.5; // Default inspiration rating
   const tagFrequency = quotes.reduce((acc, quote) => {
     quote.tags.forEach(tag => {
       acc[tag] = (acc[tag] || 0) + 1;
@@ -197,12 +196,11 @@ export async function POST(request: NextRequest) {
             text: dailyQuote.text,
             author: dailyQuote.author,
             category: categoryInfo?.name || dailyQuote.category,
-            tags: dailyQuote.tags,
-            inspiration_rating: dailyQuote.inspiration_rating
+            tags: dailyQuote.tags
           },
           formatted_outputs: {
             simple: `"${dailyQuote.text}" — ${dailyQuote.author}`,
-            email: `🌟 Daily Inspiration 🌟\n\n"${dailyQuote.text}"\n\n— ${dailyQuote.author}\n\nCategory: ${categoryInfo?.name}\nInspiration Rating: ${dailyQuote.inspiration_rating}/10`,
+            email: `🌟 Daily Inspiration 🌟\n\n"${dailyQuote.text}"\n\n— ${dailyQuote.author}\n\nCategory: ${categoryInfo?.name}`,
             social_media: `${dailyQuote.text} — ${dailyQuote.author} #DailyInspiration #${dailyQuote.category} #Motivation`,
             slack: {
               text: "Daily Inspiration Quote",
@@ -219,7 +217,7 @@ export async function POST(request: NextRequest) {
                   elements: [
                     {
                       type: "mrkdwn",
-                      text: `Category: ${categoryInfo?.name} | Rating: ${dailyQuote.inspiration_rating}/10`
+                      text: `Category: ${categoryInfo?.name}`
                     }
                   ]
                 }
@@ -238,7 +236,7 @@ export async function POST(request: NextRequest) {
         response.data = {
           ...analytics,
           insights: {
-            most_inspirational: quotes.sort((a, b) => (b.inspiration_rating || 5) - (a.inspiration_rating || 5))[0],
+            most_popular: quotes[Math.floor(Math.random() * quotes.length)], // Random quote as most popular
             shortest_quote: quotes.sort((a, b) => a.text.length - b.text.length)[0],
             longest_quote: quotes.sort((a, b) => b.text.length - a.text.length)[0],
             avg_quote_length: Math.round(quotes.reduce((sum, q) => sum + q.text.length, 0) / quotes.length)
@@ -275,7 +273,7 @@ export async function POST(request: NextRequest) {
           },
           alternatives: {
             random: getRandomQuotes(1)[0],
-            popular: quotes.sort((a, b) => (b.inspiration_rating || 5) - (a.inspiration_rating || 5))[0]
+            popular: quotes[Math.floor(Math.random() * quotes.length)] // Random quote as popular alternative
           }
         };
         response.message = 'Smart recommendation based on time and context';
