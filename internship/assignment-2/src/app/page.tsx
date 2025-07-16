@@ -10,7 +10,6 @@ import Link from 'next/link';
 
 interface SummaryResult {
   english: string;
-  urdu: string;
   metadata: {
     title: string;
     wordCount: number;
@@ -54,41 +53,33 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900">
-      <div className="container mx-auto p-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Nexium Internship Projects
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-2">
-            Muhammad Abdul Raheem Khan - Project Portfolio
-          </p>
-          <div className="flex justify-center gap-2 mb-6">
-            <Badge variant="secondary">Blog Summarizer Platform</Badge>
-            <Badge variant="outline">n8n Webhook Integration</Badge>
-          </div>
-          
-          {/* Quick Navigation */}
-          <div className="flex justify-center gap-4 mb-8">
-            <Link href="/webhooks">
-              <Button variant="outline" className="flex items-center gap-2">
-                🔗 Webhook Dashboard
-              </Button>
-            </Link>
-            <Link href="/analytics">
-              <Button variant="outline" className="flex items-center gap-2">
-                📊 Analytics Dashboard
-              </Button>
-            </Link>
-            <Link href="/api/webhook/quotes" target="_blank">
-              <Button variant="outline" className="flex items-center gap-2">
-                📚 API Documentation
-              </Button>
-            </Link>
-          </div>
+    <div className="container mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-blue-950 dark:via-gray-900 dark:to-green-950">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent mb-4">
+          Advanced Blog Summarizer
+        </h1>
+        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          Professional blog content extraction, AI-powered summarization, and enterprise analytics platform
+        </p>
+        
+        <div className="flex justify-center space-x-4 mt-6">
+          <Badge variant="outline" className="px-4 py-2">🔍 Smart Scraping</Badge>
+          <Badge variant="outline" className="px-4 py-2">🤖 AI Summarization</Badge>
+          <Badge variant="outline" className="px-4 py-2">📊 Real-time Analytics</Badge>
+          <Badge variant="outline" className="px-4 py-2">🔗 Webhook Integration</Badge>
         </div>
+        
+        <div className="flex justify-center space-x-6 mt-8">
+          <Link href="/analytics" className="text-blue-600 hover:text-blue-800 font-medium">
+            📊 View Analytics Dashboard
+          </Link>
+          <Link href="/webhooks" className="text-green-600 hover:text-green-800 font-medium">
+            🔗 Webhook Integration
+          </Link>
+        </div>
+      </div>
 
+      <div className="max-w-6xl mx-auto">
         <Tabs defaultValue="blog-summarizer" className="space-y-8">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="blog-summarizer">📝 Blog Summarizer</TabsTrigger>
@@ -101,7 +92,7 @@ export default function HomePage() {
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl">Blog URL Summarizer</CardTitle>
                 <CardDescription>
-                  Enter a blog URL to automatically extract, summarize, and translate content
+                  Enter a blog URL to automatically extract and summarize content with AI-powered analysis
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -130,12 +121,11 @@ export default function HomePage() {
             </Card>
 
             {/* Process Steps */}
-            <div className="grid gap-4 md:grid-cols-4 max-w-4xl mx-auto">
+            <div className="grid gap-4 md:grid-cols-3 max-w-4xl mx-auto">
               {[
                 { step: 1, title: 'Extract', desc: 'Scrape blog content using Cheerio', icon: '🔍' },
-                { step: 2, title: 'Summarize', desc: 'Generate AI-style summary with logic', icon: '🤖' },
-                { step: 3, title: 'Translate', desc: 'Convert to Urdu using dictionary', icon: '🌐' },
-                { step: 4, title: 'Store', desc: 'Save to Supabase & MongoDB', icon: '💾' }
+                { step: 2, title: 'Summarize', desc: 'Generate AI-style summary with advanced algorithms', icon: '🤖' },
+                { step: 3, title: 'Store', desc: 'Save to Supabase & MongoDB databases', icon: '💾' }
               ].map((item) => (
                 <Card key={item.step} className="text-center">
                   <CardContent className="pt-6">
@@ -149,180 +139,120 @@ export default function HomePage() {
 
             {/* Results */}
             {result && (
-              <div className="grid gap-6 md:grid-cols-2 max-w-6xl mx-auto">
+              <div className="max-w-4xl mx-auto">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      🇺🇸 English Summary
+                      📝 Smart Summary
                     </CardTitle>
+                    <CardDescription>
+                      AI-powered content summarization with intelligent sentence scoring
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
                       {result.english}
                     </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      🇵🇰 Urdu Translation
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed" dir="rtl">
-                      {result.urdu}
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="md:col-span-2">
-                  <CardHeader>
-                    <CardTitle>📊 Metadata</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-4 md:grid-cols-4">
-                      <div>
-                        <span className="text-sm text-gray-500">Title</span>
-                        <p className="font-medium">{result.metadata.title}</p>
-                      </div>
-                      <div>
-                        <span className="text-sm text-gray-500">Word Count</span>
-                        <p className="font-medium">{result.metadata.wordCount}</p>
-                      </div>
-                      <div>
-                        <span className="text-sm text-gray-500">Reading Time</span>
-                        <p className="font-medium">{result.metadata.readingTime}</p>
-                      </div>
-                      <div>
-                        <span className="text-sm text-gray-500">Source</span>
-                        <p className="font-medium truncate">{result.metadata.source}</p>
+                    
+                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <h4 className="font-semibold mb-2">📊 Content Metadata</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <span className="text-gray-500">Source:</span>
+                          <p className="font-medium">{result.metadata.source}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Word Count:</span>
+                          <p className="font-medium">{result.metadata.wordCount}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Reading Time:</span>
+                          <p className="font-medium">{result.metadata.readingTime}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Title:</span>
+                          <p className="font-medium">{result.metadata.title}</p>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
+
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    ✅ Content processed and saved to dual database architecture (Supabase + MongoDB)
+                  </p>
+                </div>
               </div>
             )}
           </TabsContent>
 
-          <TabsContent value="webhook-integration" className="space-y-8">
-            {/* n8n Webhook Integration */}
-            <div className="text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold mb-4">🔗 n8n Webhook Integration</h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                Advanced automation workflows connecting Quote Generator with n8n platform
-              </p>
-            </div>
-
-            {/* Webhook Features */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-              {[
-                {
-                  icon: '⚡',
-                  title: 'Real-time Triggers',
-                  description: 'Instant webhook responses for n8n workflow automation',
-                  features: ['Quote generation', 'Daily inspiration', 'Category analysis']
-                },
-                {
-                  icon: '🔄',
-                  title: 'Automated Workflows',
-                  description: 'Seamless integration with external automation platforms',
-                  features: ['Scheduled quotes', 'Event-driven responses', 'Batch processing']
-                },
-                {
-                  icon: '📊',
-                  title: 'Live Monitoring',
-                  description: 'Real-time dashboard for webhook activity tracking',
-                  features: ['Response times', 'Success rates', 'Error logging']
-                },
-                {
-                  icon: '🎯',
-                  title: 'Custom Payloads',
-                  description: 'Flexible JSON configurations for diverse automation needs',
-                  features: ['Category filtering', 'Count customization', 'Format options']
-                },
-                {
-                  icon: '📱',
-                  title: 'API Documentation',
-                  description: 'Complete integration guide with examples and best practices',
-                  features: ['Endpoint reference', 'Payload examples', 'Error handling']
-                },
-                {
-                  icon: '🚀',
-                  title: 'Production Ready',
-                  description: 'Enterprise-grade webhook system with proper error handling',
-                  features: ['TypeScript safety', 'Logging system', 'Graceful failures']
-                }
-              ].map((feature) => (
-                <Card key={feature.title} className="h-full">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span className="text-2xl">{feature.icon}</span>
-                      {feature.title}
-                    </CardTitle>
-                    <CardDescription>{feature.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-1">
-                      {feature.features.map((item) => (
-                        <li key={item} className="text-sm flex items-center gap-2">
-                          <span className="text-green-500">✓</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Quick Demo */}
-            <Card className="max-w-4xl mx-auto">
+          <TabsContent value="webhook-integration" className="space-y-6">
+            <Card className="mx-auto max-w-4xl">
               <CardHeader className="text-center">
-                <CardTitle>🎮 Try the Webhook System</CardTitle>
+                <CardTitle className="text-2xl">🔗 Webhook Integration</CardTitle>
                 <CardDescription>
-                  Experience the power of automated workflows with our live webhook endpoint
+                  Advanced webhook endpoints for automation and third-party integrations
                 </CardDescription>
               </CardHeader>
-              <CardContent className="text-center space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Link href="/webhooks">
-                    <Button className="w-full h-16 text-lg">
-                      🚀 Launch Webhook Dashboard
-                      <br />
-                      <span className="text-sm opacity-75">Test and monitor automation</span>
-                    </Button>
-                  </Link>
-                  <Link href="/api/webhook/quotes" target="_blank">
-                    <Button variant="outline" className="w-full h-16 text-lg">
-                      📚 View API Documentation
-                      <br />
-                      <span className="text-sm opacity-75">Integration guide & examples</span>
-                    </Button>
-                  </Link>
+              <CardContent className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Available Endpoints</h3>
+                    <div className="space-y-3">
+                      <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <code className="text-sm">POST /api/webhook/quotes</code>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Generate motivational quotes</p>
+                      </div>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <code className="text-sm">POST /api/webhook/analyze</code>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Content analysis webhook</p>
+                      </div>
+                      <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <code className="text-sm">POST /api/webhook/notify</code>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Notification webhook</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Integration Features</h3>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        Rate limiting (100 req/min)
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        Request tracking & analytics
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        n8n workflow compatibility
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        JSON response format
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-green-500">✓</span>
+                        Error handling & monitoring
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 
-                <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h3 className="font-semibold mb-2">Webhook Endpoint:</h3>
-                  <code className="text-sm">POST /api/webhook/quotes</code>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Ready for n8n integration with multiple automation triggers
-                  </p>
+                <div className="text-center mt-8">
+                  <Link href="/webhooks">
+                    <Button className="px-8">
+                      🔗 View Webhook Dashboard
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
-
-        {/* Footer */}
-        <div className="text-center mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-gray-500 text-sm">
-            Built with Next.js 15, TypeScript, ShadCN UI, and Modern Web Technologies
-          </p>
-          <p className="text-gray-400 text-xs mt-1">
-            Nexium Internship • Enterprise Project • Muhammad Abdul Raheem Khan
-          </p>
-        </div>
       </div>
     </div>
   );
