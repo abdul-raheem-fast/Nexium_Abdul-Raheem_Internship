@@ -54,10 +54,10 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-blue-950 dark:via-gray-900 dark:to-green-950">
-      <div className="text-center mb-12">
+        <div className="text-center mb-12">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent mb-4">
           Advanced Blog Summarizer
-        </h1>
+          </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
           Professional blog content extraction, AI-powered summarization, and enterprise analytics platform
         </p>
@@ -67,17 +67,17 @@ export default function HomePage() {
           <Badge variant="outline" className="px-4 py-2">🤖 AI Summarization</Badge>
           <Badge variant="outline" className="px-4 py-2">📊 Real-time Analytics</Badge>
           <Badge variant="outline" className="px-4 py-2">🔗 Webhook Integration</Badge>
-        </div>
-        
+          </div>
+          
         <div className="flex justify-center space-x-6 mt-8">
           <Link href="/analytics" className="text-blue-600 hover:text-blue-800 font-medium">
             📊 View Analytics Dashboard
-          </Link>
+            </Link>
           <Link href="/webhooks" className="text-green-600 hover:text-green-800 font-medium">
             🔗 Webhook Integration
-          </Link>
+            </Link>
+          </div>
         </div>
-      </div>
 
       <div className="max-w-6xl mx-auto">
         <Tabs defaultValue="blog-summarizer" className="space-y-8">
@@ -157,19 +157,19 @@ export default function HomePage() {
                     <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                       <h4 className="font-semibold mb-2">📊 Content Metadata</h4>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
+                      <div>
                           <span className="text-gray-500">Source:</span>
                           <p className="font-medium">{result.metadata.source}</p>
-                        </div>
-                        <div>
+                      </div>
+                      <div>
                           <span className="text-gray-500">Word Count:</span>
-                          <p className="font-medium">{result.metadata.wordCount}</p>
-                        </div>
-                        <div>
+                        <p className="font-medium">{result.metadata.wordCount}</p>
+                      </div>
+                      <div>
                           <span className="text-gray-500">Reading Time:</span>
-                          <p className="font-medium">{result.metadata.readingTime}</p>
-                        </div>
-                        <div>
+                        <p className="font-medium">{result.metadata.readingTime}</p>
+                      </div>
+                      <div>
                           <span className="text-gray-500">Title:</span>
                           <p className="font-medium">{result.metadata.title}</p>
                         </div>

@@ -189,7 +189,7 @@ Content-Type: application/json
 #### Get Mood Entries
 ```bash
 # Get paginated mood entries
-GET /api/moods?page=1&limit=30&from=2024-01-01&to=2024-01-31
+GET /api/moods?page=1&limit=30&from=2025-07-01&to=2025-07-31
 
 # Get today's entry
 GET /api/moods/today
@@ -255,10 +255,10 @@ Authorization: Bearer <access-token>
 #### Export Data
 ```bash
 # Export as JSON
-GET /api/analytics/export?format=json&startDate=2024-01-01
+GET /api/analytics/export?format=json&startDate=2025-07-01
 
 # Export as CSV
-GET /api/analytics/export?format=csv&startDate=2024-01-01
+GET /api/analytics/export?format=csv&startDate=2025-07-01
 ```
 
 ## 🗄️ Database Schema

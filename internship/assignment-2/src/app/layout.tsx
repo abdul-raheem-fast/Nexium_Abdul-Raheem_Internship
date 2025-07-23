@@ -191,7 +191,7 @@ export default function RootLayout({
               </div>
             </div>
             <div className="border-t border-gray-800 mt-6 pt-6 text-xs text-gray-500">
-              <p>© 2024 Nexium Internship Program. This project demonstrates advanced full-stack development skills.</p>
+              <p>© 2025 Nexium Internship Program. This project demonstrates advanced full-stack development skills.</p>
             </div>
           </div>
         </footer>

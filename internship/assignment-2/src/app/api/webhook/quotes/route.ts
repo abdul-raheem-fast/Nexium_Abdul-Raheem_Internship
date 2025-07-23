@@ -285,7 +285,7 @@ export async function POST(request: NextRequest) {
           system_info: {
             version: '2.0.0',
             uptime: '99.9%',
-            last_updated: '2024-12-11',
+            last_updated: '2025-07-15',
             environment: 'production'
           },
           available_triggers: [
