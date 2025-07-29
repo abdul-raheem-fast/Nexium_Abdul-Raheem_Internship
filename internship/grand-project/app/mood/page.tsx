@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { postMoodEntry, getMoodEntries } from '../lib/api';
 import withAuth from '../lib/withAuth';

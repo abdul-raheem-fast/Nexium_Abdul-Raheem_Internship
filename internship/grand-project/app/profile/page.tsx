@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import withAuth from '../lib/withAuth';
-import { getUserInfo, updateUserSettings } from '../lib/api';
+import { getUserInfo, updateUserSettings, logout } from '../lib/api';
 
 function ProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -34,9 +36,14 @@ function ProfilePage() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login';
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      window.location.href = '/login';
+    }
   };
 
   return (
@@ -58,14 +65,30 @@ function ProfilePage() {
           <section className="bg-white rounded-xl shadow p-6 mb-4">
             <h2 className="text-xl font-semibold mb-4">AI Settings</h2>
             <label className="flex items-center gap-2">
-              <input type="checkbox" checked={aiEnabled} onChange={e => setAiEnabled(e.target.checked)} />
+              <input
+                type="checkbox"
+                checked={aiEnabled}
+                onChange={e => setAiEnabled(e.target.checked)}
+                className="h-4 w-4 text-primary-blue focus:ring-primary-blue border-gray-300 rounded"
+              />
               Enable AI Insights
             </label>
-            <button onClick={handleSave} className="mt-4" disabled={saving}>{saving ? 'Saving...' : 'Save Settings'}</button>
+            <button
+              onClick={handleSave}
+              className="mt-4 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={saving}
+            >
+              {saving ? 'Saving...' : 'Save Settings'}
+            </button>
           </section>
           <section className="bg-white rounded-xl shadow p-6 flex flex-col gap-4">
             <h2 className="text-xl font-semibold mb-4">Account Actions</h2>
-            <button onClick={handleLogout} className="bg-error text-white font-semibold py-2 rounded">Logout</button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+            >
+              Logout
+            </button>
           </section>
         </>
       )}

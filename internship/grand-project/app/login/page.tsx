@@ -1,39 +1,52 @@
-import React, { useState } from 'react';
-import { FiLock, FiMail, FiAlertCircle, FiArrowRight } from 'react-icons/fi';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { FiMail, FiAlertCircle, FiArrowRight, FiUser, FiCheckCircle } from 'react-icons/fi';
+import { sendMagicLink } from '../lib/api';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [emailSent, setEmailSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
+    
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) throw new Error((await res.json()).message || 'Login failed');
-      const data = await res.json();
-      localStorage.setItem('token', data.token);
-      window.location.href = '/dashboard';
+      const response = await sendMagicLink(email);
+      setSuccess(response.message);
+      setEmailSent(true);
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Failed to send magic link');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleTryAgain = () => {
+    setEmailSent(false);
+    setSuccess('');
+    setError('');
+  };
+
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 md:p-10 transform transition-all duration-300 hover:shadow-xl">
+    <div className="min-h-[90vh] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10 transform transition-all duration-300 hover:shadow-2xl border border-neutral-100">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-blue mb-2">Welcome Back</h1>
-          <p className="text-neutral-500">Sign in to continue your wellness journey</p>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-blue/10 rounded-full mb-4">
+            <FiUser className="h-8 w-8 text-primary-blue" />
+          </div>
+          <h1 className="text-3xl font-bold text-primary-blue mb-2">
+            {emailSent ? 'Check Your Email' : 'Welcome Back'}
+          </h1>
+          <p className="text-neutral-500">
+            {emailSent ? 'We sent you a secure sign-in link' : 'Sign in to continue your wellness journey'}
+          </p>
         </div>
         
         {error && (
@@ -42,87 +55,95 @@ export default function LoginPage() {
             <span>{error}</span>
           </div>
         )}
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiMail className="h-5 w-5 text-neutral-400" />
-            </div>
-            <input 
-              type="email" 
-              placeholder="Email address" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
-              required 
-              className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none" 
-            />
+
+        {success && (
+          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 animate-fadeIn">
+            <FiCheckCircle className="h-5 w-5 flex-shrink-0" />
+            <span>{success}</span>
           </div>
-          
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiLock className="h-5 w-5 text-neutral-400" />
+        )}
+
+        {emailSent ? (
+          <div className="text-center space-y-6">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
+                <FiMail className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Magic Link Sent!</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                We've sent a secure sign-in link to:
+              </p>
+              <p className="font-medium text-blue-600 mb-4">{email}</p>
+              <p className="text-xs text-gray-500">
+                The link will expire in 15 minutes for security.
+              </p>
             </div>
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              required 
-              className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none" 
-            />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input 
-                id="remember-me" 
-                name="remember-me" 
-                type="checkbox" 
-                className="h-4 w-4 text-primary-blue focus:ring-primary-blue border-neutral-300 rounded" 
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-neutral-700">
-                Remember me
-              </label>
+            
+            <div className="space-y-3">
+              <button
+                onClick={handleTryAgain}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium transition-colors"
+              >
+                Try Different Email
+              </button>
+              <p className="text-xs text-gray-500">
+                Didn't receive the email? Check your spam folder or try again.
+              </p>
             </div>
-            <a href="/forgot-password" className="text-sm font-medium text-primary-blue hover:text-primary-teal transition-colors">
-              Forgot password?
-            </a>
           </div>
-          
-          <button 
-            type="submit" 
-            disabled={loading} 
-            className="mt-2 w-full bg-primary-blue text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-primary-blue/90 transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Signing in...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In</span>
-                <FiArrowRight className="h-4 w-4" />
-              </>
-            )}
-          </button>
-        </form>
-        
-        <div className="mt-8 pt-6 border-t border-neutral-200 text-center">
-          <p className="text-neutral-600">
-            Don&apos;t have an account?{' '}
-            <a href="/register" className="font-medium text-primary-blue hover:text-primary-teal transition-colors">
-              Create account
-            </a>
-          </p>
-        </div>
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none group-focus-within:text-primary-blue transition-colors">
+                  <FiMail className="h-5 w-5 text-neutral-400 group-focus-within:text-primary-blue transition-colors" />
+                </div>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none bg-white/80 backdrop-blur-sm"
+                />
+                <label className={`absolute text-xs font-medium text-primary-blue ${email ? 'opacity-100 -top-2 left-2 px-1 bg-white' : 'opacity-0'} transition-all duration-200`}>Email</label>
+              </div>
+              
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-6 w-full bg-gradient-to-r from-primary-blue to-primary-teal text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:from-primary-teal hover:to-primary-blue transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-md hover:shadow-lg"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <span>Sending Magic Link...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Send Magic Link</span>
+                    <FiArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+            
+            <div className="mt-8 text-center">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-800">
+                  🔒 <strong>Secure Sign-In:</strong> We'll send you a secure link via email. No passwords needed!
+                </p>
+              </div>
+            </div>
+          </>
+        )}
         
         <div className="mt-8 text-center">
           <p className="text-xs text-neutral-500">
             By signing in, you agree to our{' '}
-            <a href="/terms" className="text-primary-blue hover:underline">Terms of Service</a>{' '}
+            <a href="/terms" className="text-primary-blue hover:underline underline-offset-4">Terms of Service</a>{' '}
             and{' '}
-            <a href="/privacy" className="text-primary-blue hover:underline">Privacy Policy</a>
+            <a href="/privacy" className="text-primary-blue hover:underline underline-offset-4">Privacy Policy</a>
           </p>
         </div>
       </div>

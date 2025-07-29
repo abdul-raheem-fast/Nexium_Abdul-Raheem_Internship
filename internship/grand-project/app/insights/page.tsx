@@ -1,22 +1,19 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
-import { getAIInsights, getAIRecommendations } from '../lib/api';
+import { getAIInsights } from '../lib/api';
 import withAuth from '../lib/withAuth';
 
 function InsightsPage() {
   const [insights, setInsights] = useState<any>(null);
-  const [recommendations, setRecommendations] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      getAIInsights(),
-      getAIRecommendations(),
-    ])
-      .then(([insightsData, recsData]) => {
+    getAIInsights()
+      .then((insightsData) => {
         setInsights(insightsData);
-        setRecommendations(recsData);
         setError('');
       })
       .catch((err) => {
@@ -36,9 +33,9 @@ function InsightsPage() {
         <>
           <section className="bg-white rounded-xl shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Personalized Recommendations</h2>
-            {recommendations?.items?.length ? (
+            {insights?.recommendations?.length ? (
               <ul className="list-disc pl-6 text-neutral-700">
-                {recommendations.items.map((rec: any, i: number) => (
+                {insights.recommendations.map((rec: any, i: number) => (
                   <li key={i}>{rec}</li>
                 ))}
               </ul>

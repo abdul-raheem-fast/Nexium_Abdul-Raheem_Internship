@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { FiUser, FiLock, FiMail, FiAlertCircle, FiUserPlus } from 'react-icons/fi';
 
@@ -30,11 +32,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 md:p-10 transform transition-all duration-300 hover:shadow-xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary-blue mb-2">Create Account</h1>
-          <p className="text-neutral-500">Join us on your journey to better mental wellness</p>
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-8 sm:py-12">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 sm:p-8 md:p-10 transform transition-all duration-300 hover:shadow-xl">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-blue mb-2">Create Account</h1>
+          <p className="text-sm sm:text-base text-neutral-500">Join us on your journey to better mental wellness</p>
         </div>
         
         {error && (
@@ -44,86 +46,86 @@ export default function RegisterPage() {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiUser className="h-5 w-5 text-neutral-400" />
+              <FiUser className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400" />
             </div>
-            <input 
-              type="text" 
-              placeholder="Full name" 
-              value={name} 
-              onChange={e => setName(e.target.value)} 
-              required 
-              className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none" 
-            />
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiMail className="h-5 w-5 text-neutral-400" />
-            </div>
-            <input 
-              type="email" 
-              placeholder="Email address" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
-              required 
-              className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none" 
-            />
-          </div>
-          
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <FiLock className="h-5 w-5 text-neutral-400" />
-            </div>
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
-              required 
-              className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none" 
-            />
-            <p className="mt-1 text-xs text-neutral-500">Password must be at least 8 characters long</p>
-          </div>
-          
-          <div className="flex items-center mt-2">
-            <input 
-              id="terms" 
-              name="terms" 
-              type="checkbox" 
+            <input
+              type="text"
+              placeholder="Full name"
+              value={name}
+              onChange={e => setName(e.target.value)}
               required
-              className="h-4 w-4 text-primary-blue focus:ring-primary-blue border-neutral-300 rounded" 
+              className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none"
             />
-            <label htmlFor="terms" className="ml-2 block text-sm text-neutral-700">
+          </div>
+          
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FiMail className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400" />
+            </div>
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none"
+            />
+          </div>
+          
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FiLock className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-400" />
+            </div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-3 text-sm sm:text-base border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none"
+            />
+            <p className="mt-1 text-xs sm:text-sm text-neutral-500">Password must be at least 8 characters long</p>
+          </div>
+          
+          <div className="flex items-start mt-2">
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              required
+              className="h-4 w-4 text-primary-blue focus:ring-primary-blue border-neutral-300 rounded mt-0.5 flex-shrink-0"
+            />
+            <label htmlFor="terms" className="ml-2 block text-xs sm:text-sm text-neutral-700 leading-relaxed">
               I agree to the <a href="/terms" className="text-primary-blue hover:underline">Terms of Service</a> and <a href="/privacy" className="text-primary-blue hover:underline">Privacy Policy</a>
             </label>
           </div>
           
-          <button 
-            type="submit" 
-            disabled={loading} 
-            className="mt-4 w-full bg-primary-blue text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-primary-blue/90 transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-4 sm:mt-6 w-full bg-primary-blue text-white py-2.5 sm:py-3 px-4 rounded-lg font-medium text-sm sm:text-base flex items-center justify-center gap-2 hover:bg-primary-blue/90 transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-md hover:shadow-lg"
           >
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
                 <span>Creating account...</span>
               </>
             ) : (
               <>
                 <span>Create Account</span>
-                <FiUserPlus className="h-4 w-4" />
+                <FiUserPlus className="h-3 w-3 sm:h-4 sm:w-4" />
               </>
             )}
           </button>
         </form>
         
-        <div className="mt-8 pt-6 border-t border-neutral-200 text-center">
-          <p className="text-neutral-600">
+        <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-neutral-200 text-center">
+          <p className="text-sm sm:text-base text-neutral-600">
             Already have an account?{' '}
-            <a href="/login" className="font-medium text-primary-blue hover:text-primary-teal transition-colors">
+            <a href="/login" className="font-medium text-primary-blue hover:text-primary-teal transition-colors underline-offset-4 hover:underline">
               Sign in
             </a>
           </p>

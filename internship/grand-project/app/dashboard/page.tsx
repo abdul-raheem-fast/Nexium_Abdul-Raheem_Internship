@@ -1,10 +1,14 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { getDashboardAnalytics, getAIInsights } from '../lib/api';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import withAuth from '../lib/withAuth';
 import { FiActivity, FiAlertCircle, FiBarChart2, FiCalendar, FiClock, FiPlusCircle, FiRefreshCw, FiTrendingUp } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 function DashboardPage() {
+  const router = useRouter();
   const [analytics, setAnalytics] = useState<any>(null);
   const [aiInsights, setAIInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -26,6 +30,27 @@ function DashboardPage() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  const handleRefresh = () => {
+    setLoading(true);
+    Promise.all([
+      getDashboardAnalytics(),
+      getAIInsights(),
+    ])
+      .then(([analyticsData, aiData]) => {
+        setAnalytics(analyticsData);
+        setAIInsights(aiData);
+        setError('');
+      })
+      .catch((err) => {
+        setError(err.message || 'Failed to load dashboard data.');
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleNewEntry = () => {
+    router.push('/mood');
+  };
 
   // Mock data for additional charts
   const activityImpact = [
@@ -63,10 +88,16 @@ function DashboardPage() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <h1 className="text-3xl font-bold text-primary-blue">Your Wellness Dashboard</h1>
         <div className="flex items-center gap-3">
-          <button className="flex items-center gap-2 bg-primary-blue/10 hover:bg-primary-blue/20 text-primary-blue px-4 py-2 rounded-lg transition-colors">
+          <button
+            onClick={handleRefresh}
+            className="flex items-center gap-2 bg-primary-blue/10 hover:bg-primary-blue/20 text-primary-blue px-4 py-2 rounded-lg transition-colors"
+          >
             <FiRefreshCw className="h-4 w-4" /> Refresh
           </button>
-          <button className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors">
+          <button
+            onClick={handleNewEntry}
+            className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors"
+          >
             <FiPlusCircle className="h-4 w-4" /> New Entry
           </button>
         </div>
