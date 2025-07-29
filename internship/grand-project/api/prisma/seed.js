@@ -117,17 +117,25 @@ async function main() {
     }
   ];
 
+  // Create a system user first for achievements
+  console.log('Creating system user...');
+  const systemUser = await prisma.user.upsert({
+    where: { email: 'system@mentalhealthtracker.com' },
+    update: {},
+    create: {
+      email: 'system@mentalhealthtracker.com',
+      name: 'System',
+      isActive: true,
+    }
+  });
+
   // Create default achievements
   console.log('Creating default achievements...');
   for (const achievement of achievements) {
-    await prisma.achievement.upsert({
-      where: { 
-        title: achievement.title 
-      },
-      update: {},
-      create: {
+    await prisma.achievement.create({
+      data: {
         ...achievement,
-        userId: 'system', // System achievements available to all users
+        userId: systemUser.id, // System achievements available to all users
         progress: 0,
         isUnlocked: false
       }
