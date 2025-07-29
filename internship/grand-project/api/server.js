@@ -1,15 +1,14 @@
+import dotenv from 'dotenv';
+dotenv.config();
+console.log('OpenAI Key:', process.env.OPENAI_API_KEY);
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-import dotenv from 'dotenv';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import slowDown from 'express-slow-down';
 import winston from 'winston';
 import { PrismaClient } from '@prisma/client';
-
-// Load environment variables
-dotenv.config();
 
 // Initialize Prisma
 const prisma = new PrismaClient({
@@ -51,7 +50,7 @@ const rateLimiter = new RateLimiterMemory({
 const speedLimiter = slowDown({
   windowMs: 15 * 60 * 1000, // 15 minutes
   delayAfter: 50, // allow 50 requests per 15 minutes at full speed
-  delayMs: 500 // slow down subsequent requests by 500ms per request
+  delayMs: () => 500, // slow down subsequent requests by 500ms per request (function form to remove warning)
 });
 
 // Middleware

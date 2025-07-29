@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+console.log('AI ROUTE ENV KEY:', process.env.OPENAI_API_KEY);
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import { body, validationResult } from 'express-validator';

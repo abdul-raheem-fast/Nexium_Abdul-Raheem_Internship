@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getDashboardAnalytics, getAIInsights } from '../lib/api';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import withAuth from '../lib/withAuth';
+import { FiActivity, FiAlertCircle, FiBarChart2, FiCalendar, FiClock, FiPlusCircle, FiRefreshCw, FiTrendingUp } from 'react-icons/fi';
 
 function DashboardPage() {
   const [analytics, setAnalytics] = useState<any>(null);
@@ -26,64 +27,296 @@ function DashboardPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Mock data for additional charts
+  const activityImpact = [
+    { name: 'Exercise', impact: 8.5 },
+    { name: 'Meditation', impact: 7.8 },
+    { name: 'Reading', impact: 6.5 },
+    { name: 'Social', impact: 7.2 },
+    { name: 'Work', impact: 5.1 },
+  ];
+
+  const sleepQuality = [
+    { name: 'Excellent', value: 25 },
+    { name: 'Good', value: 40 },
+    { name: 'Fair', value: 20 },
+    { name: 'Poor', value: 15 },
+  ];
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
+    const y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-bold text-primary-blue mb-2">Dashboard</h1>
+    <div className="flex flex-col gap-8 pb-12">
+      {/* Dashboard Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
+        <h1 className="text-3xl font-bold text-primary-blue">Your Wellness Dashboard</h1>
+        <div className="flex items-center gap-3">
+          <button className="flex items-center gap-2 bg-primary-blue/10 hover:bg-primary-blue/20 text-primary-blue px-4 py-2 rounded-lg transition-colors">
+            <FiRefreshCw className="h-4 w-4" /> Refresh
+          </button>
+          <button className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors">
+            <FiPlusCircle className="h-4 w-4" /> New Entry
+          </button>
+        </div>
+      </div>
+
       {loading ? (
-        <div className="text-neutral-500">Loading...</div>
+        <div className="flex items-center justify-center h-64 bg-white rounded-xl shadow">
+          <div className="flex flex-col items-center gap-3">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-blue"></div>
+            <p className="text-neutral-500 font-medium">Loading your wellness data...</p>
+          </div>
+        </div>
       ) : error ? (
-        <div className="text-error font-medium">{error}</div>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl font-medium flex items-center gap-3">
+          <FiAlertCircle className="h-5 w-5" />
+          {error}
+        </div>
       ) : (
         <>
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Stats Overview */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
+              <div className="bg-primary-blue/10 p-3 rounded-full">
+                <FiActivity className="h-6 w-6 text-primary-blue" />
+              </div>
+              <div>
+                <p className="text-neutral-500 text-sm">Current Mood</p>
+                <p className="text-2xl font-bold text-primary-blue">{analytics?.moodStats?.avgMood || '7.5'}/10</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
+              <div className="bg-primary-teal/10 p-3 rounded-full">
+                <FiTrendingUp className="h-6 w-6 text-primary-teal" />
+              </div>
+              <div>
+                <p className="text-neutral-500 text-sm">Streak</p>
+                <p className="text-2xl font-bold text-primary-teal">{analytics?.moodStats?.totalEntries || '12'} days</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
+              <div className="bg-secondary-purple/10 p-3 rounded-full">
+                <FiCalendar className="h-6 w-6 text-secondary-purple" />
+              </div>
+              <div>
+                <p className="text-neutral-500 text-sm">Best Day</p>
+                <p className="text-2xl font-bold text-secondary-purple">{analytics?.moodStats?.bestDay || 'Friday'}</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
+              <div className="bg-secondary-orange/10 p-3 rounded-full">
+                <FiClock className="h-6 w-6 text-secondary-orange" />
+              </div>
+              <div>
+                <p className="text-neutral-500 text-sm">Next Check-in</p>
+                <p className="text-2xl font-bold text-secondary-orange">4h 30m</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Charts Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Mood Trends</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-primary-blue">Mood Trends</h2>
+                <div className="flex gap-2">
+                  <button className="px-3 py-1 text-xs rounded-full bg-primary-blue/10 text-primary-blue font-medium">Week</button>
+                  <button className="px-3 py-1 text-xs rounded-full bg-white text-neutral-500 font-medium">Month</button>
+                  <button className="px-3 py-1 text-xs rounded-full bg-white text-neutral-500 font-medium">Year</button>
+                </div>
+              </div>
               {analytics?.moodHistory?.length ? (
                 <div className="w-full h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.moodHistory} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                       <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                      <YAxis domain={[1, 10]} tickCount={10} tick={{ fontSize: 12 }} />
-                      <Tooltip />
-                      <Line type="monotone" dataKey="moodScore" stroke="#2563eb" strokeWidth={2} dot={{ r: 3 }} />
+                      <YAxis domain={[1, 10]} tickCount={5} tick={{ fontSize: 12 }} />
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none' }}
+                        labelStyle={{ fontWeight: 'bold', color: '#333' }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="moodScore" 
+                        stroke="#2563eb" 
+                        strokeWidth={3} 
+                        dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }} 
+                        activeDot={{ r: 6, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
               ) : analytics?.moodStats ? (
-                <div className="flex flex-col gap-2">
-                  <div>Average Mood: <span className="font-semibold">{analytics.moodStats.avgMood}</span></div>
-                  <div>Best Day: <span className="font-semibold">{analytics.moodStats.bestDay}</span></div>
-                  <div>Worst Day: <span className="font-semibold">{analytics.moodStats.worstDay}</span></div>
-                  <div>Total Entries: <span className="font-semibold">{analytics.moodStats.totalEntries}</span></div>
+                <div className="flex flex-col gap-3 p-4 bg-neutral-50 rounded-lg">
+                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
+                    <span className="text-neutral-700">Average Mood:</span>
+                    <span className="font-semibold text-primary-blue">{analytics.moodStats.avgMood}/10</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
+                    <span className="text-neutral-700">Best Day:</span>
+                    <span className="font-semibold text-primary-teal">{analytics.moodStats.bestDay}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
+                    <span className="text-neutral-700">Worst Day:</span>
+                    <span className="font-semibold text-secondary-orange">{analytics.moodStats.worstDay}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2">
+                    <span className="text-neutral-700">Total Entries:</span>
+                    <span className="font-semibold text-secondary-purple">{analytics.moodStats.totalEntries}</span>
+                  </div>
                 </div>
               ) : (
-                <div className="text-neutral-500">No analytics data.</div>
+                <div className="flex flex-col items-center justify-center h-64 bg-neutral-50 rounded-lg">
+                  <FiBarChart2 className="h-12 w-12 text-neutral-300 mb-3" />
+                  <p className="text-neutral-500 font-medium">No mood data available yet</p>
+                  <button className="mt-4 text-primary-blue font-medium hover:underline">Add your first entry</button>
+                </div>
               )}
             </div>
+
             <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">AI Insights</h2>
-              {aiInsights?.summary ? (
-                <div className="text-neutral-700">{aiInsights.summary}</div>
-              ) : (
-                <div className="text-neutral-500">No AI insights available.</div>
-              )}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold text-primary-blue">Activity Impact</h2>
+                <button className="text-sm text-primary-blue hover:underline">View All</button>
+              </div>
+              <div className="w-full h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={activityImpact} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                    <YAxis domain={[0, 10]} tickCount={5} tick={{ fontSize: 12 }} />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none' }}
+                      labelStyle={{ fontWeight: 'bold', color: '#333' }}
+                    />
+                    <Bar dataKey="impact" fill="#14b8a6" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </section>
-          <section className="bg-white rounded-xl shadow p-6 mt-4">
-            <h2 className="text-xl font-semibold mb-4">Recent Mood Entries</h2>
-            {analytics?.recentEntries?.length ? (
-              <ul className="divide-y divide-neutral-200">
-                {analytics.recentEntries.slice(0, 5).map((entry: any, i: number) => (
-                  <li key={entry.id || i} className="py-2 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                    <span className="font-medium text-primary-blue">{entry.moodType} ({entry.moodScore})</span>
-                    <span className="text-neutral-500 text-sm">{new Date(entry.createdAt).toLocaleDateString()}</span>
-                    <span className="text-neutral-700 text-sm">{entry.notes}</span>
-                  </li>
+
+          {/* Additional Insights Section */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl shadow p-6 lg:col-span-2">
+              <h2 className="text-xl font-semibold mb-4 text-primary-blue">AI Insights</h2>
+              {aiInsights?.summary ? (
+                <div className="bg-neutral-50 p-4 rounded-lg text-neutral-700 leading-relaxed">
+                  <p className="italic text-primary-blue/80 mb-3">"Based on your recent data, our AI has identified the following insights:"</p>
+                  <p>{aiInsights.summary}</p>
+                  <div className="mt-4 pt-4 border-t border-neutral-200">
+                    <h3 className="font-medium mb-2 text-primary-blue">Recommendations:</h3>
+                    <ul className="list-disc list-inside space-y-1 text-neutral-700">
+                      <li>Try to maintain your meditation practice - it correlates with your best mood days</li>
+                      <li>Consider reducing screen time in the evening to improve sleep quality</li>
+                      <li>Your mood tends to improve after social activities</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-64 bg-neutral-50 rounded-lg">
+                  <p className="text-neutral-500 font-medium">No AI insights available yet.</p>
+                  <p className="text-neutral-400 text-sm mt-2">Continue logging your daily entries to receive personalized insights.</p>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-xl shadow p-6">
+              <h2 className="text-xl font-semibold mb-4 text-primary-blue">Sleep Quality</h2>
+              <div className="w-full h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={sleepQuality}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {sleepQuality.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value, name) => [`${value}%`, name]} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3 mt-4">
+                {sleepQuality.map((entry, index) => (
+                  <div key={`legend-${index}`} className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                    <span className="text-sm text-neutral-700">{entry.name}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Recent Entries Section */}
+          <section className="bg-white rounded-xl shadow p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-primary-blue">Recent Mood Entries</h2>
+              <button className="text-sm text-primary-blue hover:underline">View All</button>
+            </div>
+            {analytics?.recentEntries?.length ? (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-neutral-200">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Date</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Mood</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Activities</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Notes</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-neutral-200">
+                    {analytics.recentEntries.slice(0, 5).map((entry: any, i: number) => (
+                      <tr key={entry.id || i} className="hover:bg-neutral-50">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-neutral-500">
+                          {new Date(entry.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className={`w-2 h-2 rounded-full mr-2 ${entry.moodScore >= 7 ? 'bg-green-500' : entry.moodScore >= 4 ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                            <span className="font-medium text-primary-blue">{entry.moodType} ({entry.moodScore})</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-neutral-700">
+                          {entry.activities?.join(', ') || 'None recorded'}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-neutral-700 max-w-xs truncate">
+                          {entry.notes || 'No notes'}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-neutral-500">
+                          <button className="text-primary-blue hover:underline">View</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
-              <div className="text-neutral-500">No recent entries.</div>
+              <div className="flex flex-col items-center justify-center h-32 bg-neutral-50 rounded-lg">
+                <p className="text-neutral-500 font-medium">No recent entries.</p>
+                <button className="mt-2 text-primary-blue font-medium hover:underline">Add your first entry</button>
+              </div>
             )}
           </section>
         </>
@@ -92,4 +325,4 @@ function DashboardPage() {
   );
 }
 
-export default withAuth(DashboardPage); 
+export default withAuth(DashboardPage);
