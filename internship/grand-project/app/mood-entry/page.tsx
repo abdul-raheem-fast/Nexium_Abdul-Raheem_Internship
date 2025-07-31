@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { FiSave, FiX, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
-import withAuth from '../../lib/withAuth';
+import withAuth from '../lib/withAuth';
 
 const moodOptions = [
   { value: 10, label: 'Excellent', emoji: '😁', color: 'bg-green-500' },

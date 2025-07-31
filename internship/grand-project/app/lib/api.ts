@@ -137,94 +137,73 @@ export function getDashboardAnalytics() {
       console.log('Dashboard Analytics API call failed, using mock data:', error.message);
       // Return mock data if API fails
       return {
-      overview: {
-        totalMoodEntries: 12,
-        averageMood: 7.2,
-        currentStreak: 5,
-        improvement: '+15%'
-      },
-      recentMood: {
-        trend: 'improving',
-        average: 7.5,
-        entries: [
-          { date: '2025-07-25', mood: 8 },
-          { date: '2025-07-26', mood: 7 },
-          { date: '2025-07-27', mood: 8 },
-          { date: '2025-07-28', mood: 6 },
-          { date: '2025-07-29', mood: 8 },
-          { date: '2025-07-30', mood: 9 },
-          { date: '2025-07-31', mood: 8 }
-        ]
-      },
-      recentEntries: [
-        {
-          id: 1,
-          moodScore: 8,
-          moodType: 'GOOD',
-          createdAt: '2025-07-31T10:00:00Z',
-          activities: ['Exercise', 'Meditation'],
-          notes: 'Great workout session, feeling energized!'
-        },
-        {
-          id: 2,
-          moodScore: 7,
-          moodType: 'OKAY',
-          createdAt: '2025-07-30T15:30:00Z',
-          activities: ['Reading', 'Social'],
-          notes: 'Had a nice chat with friends'
-        },
-        {
-          id: 3,
-          moodScore: 9,
-          moodType: 'EXCELLENT',
-          createdAt: '2025-07-29T09:15:00Z',
-          activities: ['Exercise', 'Work'],
-          notes: 'Productive day at work, completed major project'
-        },
-        {
-          id: 4,
-          moodScore: 6,
-          moodType: 'OKAY',
-          createdAt: '2025-07-28T14:20:00Z',
-          activities: ['Social'],
-          notes: 'Bit tired but good day overall'
-        },
-        {
-          id: 5,
-          moodScore: 8,
-          moodType: 'GOOD',
-          createdAt: '2025-07-27T11:45:00Z',
-          activities: ['Exercise', 'Meditation', 'Reading'],
-          notes: 'Morning routine was perfect'
-        }
-      ],
-      activityImpact: [
-        { activity: 'Exercise', impact: 8.5 },
-        { activity: 'Meditation', impact: 7.8 },
-        { activity: 'Social', impact: 7.2 },
-        { activity: 'Work', impact: 5.1 }
-      ]
-    });
-  }
-  
-  // For production, try the real API with fallback
-  return fetchWithAuth(`${API_BASE}/analytics/dashboard`)
-    .catch(() => {
-      // Return mock data if API fails
-      return {
         overview: {
-          totalMoodEntries: 0,
-          averageMood: 0,
-          currentStreak: 0,
-          improvement: '0%'
+          totalMoodEntries: 12,
+          averageMood: 7.2,
+          currentStreak: 5,
+          improvement: '+15%'
         },
         recentMood: {
-          trend: 'stable',
-          average: 0,
-          entries: []
+          trend: 'improving',
+          average: 7.5,
+          entries: [
+            { date: '2025-07-25', mood: 8 },
+            { date: '2025-07-26', mood: 7 },
+            { date: '2025-07-27', mood: 8 },
+            { date: '2025-07-28', mood: 6 },
+            { date: '2025-07-29', mood: 8 },
+            { date: '2025-07-30', mood: 9 },
+            { date: '2025-07-31', mood: 8 }
+          ]
         },
-        recentEntries: [],
-        activityImpact: []
+        recentEntries: [
+          {
+            id: 1,
+            moodScore: 8,
+            moodType: 'GOOD',
+            createdAt: '2025-07-31T10:00:00Z',
+            activities: ['Exercise', 'Meditation'],
+            notes: 'Great workout session, feeling energized!'
+          },
+          {
+            id: 2,
+            moodScore: 7,
+            moodType: 'OKAY',
+            createdAt: '2025-07-30T15:30:00Z',
+            activities: ['Reading', 'Social'],
+            notes: 'Had a nice chat with friends'
+          },
+          {
+            id: 3,
+            moodScore: 9,
+            moodType: 'EXCELLENT',
+            createdAt: '2025-07-29T09:15:00Z',
+            activities: ['Exercise', 'Work'],
+            notes: 'Productive day at work, completed major project'
+          },
+          {
+            id: 4,
+            moodScore: 6,
+            moodType: 'OKAY',
+            createdAt: '2025-07-28T14:20:00Z',
+            activities: ['Social'],
+            notes: 'Bit tired but good day overall'
+          },
+          {
+            id: 5,
+            moodScore: 8,
+            moodType: 'GOOD',
+            createdAt: '2025-07-27T11:45:00Z',
+            activities: ['Exercise', 'Meditation', 'Reading'],
+            notes: 'Morning routine was perfect'
+          }
+        ],
+        activityImpact: [
+          { activity: 'Exercise', impact: 8.5 },
+          { activity: 'Meditation', impact: 7.8 },
+          { activity: 'Social', impact: 7.2 },
+          { activity: 'Work', impact: 5.1 }
+        ]
       };
     });
 }
