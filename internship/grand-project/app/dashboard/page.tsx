@@ -86,17 +86,17 @@ function DashboardPage() {
     <div className="flex flex-col gap-8 pb-12">
       {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
-        <h1 className="text-3xl font-bold text-primary-blue">Your Wellness Dashboard</h1>
+        <h1 className="text-3xl font-bold text-blue-600">Your Wellness Dashboard</h1>
         <div className="flex items-center gap-3">
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 bg-primary-blue/10 hover:bg-primary-blue/20 text-primary-blue px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-600 px-4 py-2 rounded-lg transition-colors font-medium"
           >
             <FiRefreshCw className="h-4 w-4" /> Refresh
           </button>
           <button
             onClick={handleNewEntry}
-            className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
           >
             <FiPlusCircle className="h-4 w-4" /> New Entry
           </button>
@@ -120,39 +120,39 @@ function DashboardPage() {
           {/* Stats Overview */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
-              <div className="bg-primary-blue/10 p-3 rounded-full">
-                <FiActivity className="h-6 w-6 text-primary-blue" />
+              <div className="bg-blue-100 p-3 rounded-full">
+                <FiActivity className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <p className="text-neutral-500 text-sm">Current Mood</p>
-                <p className="text-2xl font-bold text-primary-blue">{analytics?.moodStats?.avgMood || '7.5'}/10</p>
+                <p className="text-gray-500 text-sm">Current Mood</p>
+                <p className="text-2xl font-bold text-blue-600">{analytics?.overview?.averageMood || '7.5'}/10</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
-              <div className="bg-primary-teal/10 p-3 rounded-full">
-                <FiTrendingUp className="h-6 w-6 text-primary-teal" />
+              <div className="bg-green-100 p-3 rounded-full">
+                <FiTrendingUp className="h-6 w-6 text-green-600" />
               </div>
               <div>
-                <p className="text-neutral-500 text-sm">Streak</p>
-                <p className="text-2xl font-bold text-primary-teal">{analytics?.moodStats?.totalEntries || '12'} days</p>
+                <p className="text-gray-500 text-sm">Streak</p>
+                <p className="text-2xl font-bold text-green-600">{analytics?.overview?.streakDays || '5'} days</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
-              <div className="bg-secondary-purple/10 p-3 rounded-full">
-                <FiCalendar className="h-6 w-6 text-secondary-purple" />
+              <div className="bg-purple-100 p-3 rounded-full">
+                <FiCalendar className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <p className="text-neutral-500 text-sm">Best Day</p>
-                <p className="text-2xl font-bold text-secondary-purple">{analytics?.moodStats?.bestDay || 'Friday'}</p>
+                <p className="text-gray-500 text-sm">Total Entries</p>
+                <p className="text-2xl font-bold text-purple-600">{analytics?.overview?.totalEntries || '12'}</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
-              <div className="bg-secondary-orange/10 p-3 rounded-full">
-                <FiClock className="h-6 w-6 text-secondary-orange" />
+              <div className="bg-orange-100 p-3 rounded-full">
+                <FiClock className="h-6 w-6 text-orange-600" />
               </div>
               <div>
-                <p className="text-neutral-500 text-sm">Next Check-in</p>
-                <p className="text-2xl font-bold text-secondary-orange">4h 30m</p>
+                <p className="text-gray-500 text-sm">Improvement</p>
+                <p className="text-2xl font-bold text-orange-600">{analytics?.overview?.improvement || '+15%'}</p>
               </div>
             </div>
           </section>
@@ -161,11 +161,11 @@ function DashboardPage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl shadow p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-primary-blue">Mood Trends</h2>
+                <h2 className="text-xl font-semibold text-blue-600">Mood Trends</h2>
                 <div className="flex gap-2">
-                  <button className="px-3 py-1 text-xs rounded-full bg-primary-blue/10 text-primary-blue font-medium">Week</button>
-                  <button className="px-3 py-1 text-xs rounded-full bg-white text-neutral-500 font-medium">Month</button>
-                  <button className="px-3 py-1 text-xs rounded-full bg-white text-neutral-500 font-medium">Year</button>
+                  <button className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-medium">Week</button>
+                  <button className="px-3 py-1 text-xs rounded-full bg-white text-gray-500 font-medium">Month</button>
+                  <button className="px-3 py-1 text-xs rounded-full bg-white text-gray-500 font-medium">Year</button>
                 </div>
               </div>
               {analytics?.moodHistory?.length ? (

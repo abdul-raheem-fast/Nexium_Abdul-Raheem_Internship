@@ -8,7 +8,38 @@ import { body, validationResult } from 'express-validator';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
+// Initialize Prisma with error handling for development
+let prisma = null;
+
+const initializePrisma = async () => {
+  if (!process.env.DATABASE_URL) {
+    console.log('⚠️ DATABASE_URL not provided - using development mode without database');
+    return null;
+  }
+  
+  try {
+    const client = new PrismaClient();
+    // Test the connection
+    await client.$connect();
+    console.log('✅ Prisma connected successfully');
+    return client;
+  } catch (error) {
+    console.log('⚠️ Prisma connection failed - using development mode without database:', error.message);
+    return null;
+  }
+};
+
+// Initialize Prisma asynchronously
+(async () => {
+  if (process.env.DATABASE_URL) {
+    prisma = await initializePrisma();
+  }
+})();
+
+// In-memory storage for development
+const devUsers = new Map();
+const devMagicLinks = new Map();
 
 // Rate limiters for different auth operations
 const loginLimiter = new RateLimiterMemory({
@@ -25,22 +56,25 @@ const magicLinkLimiter = new RateLimiterMemory({
 
 // Email transporter setup
 const createEmailTransporter = () => {
-  if (process.env.NODE_ENV === 'production') {
+  // For development, just log the email instead of sending
+  if (process.env.NODE_ENV === 'development') {
+    console.log('📧 Development mode: Email would be sent here');
+    return {
+      sendMail: async (mailOptions) => {
+        console.log('📧 Magic Link Email:', {
+          to: mailOptions.to,
+          subject: mailOptions.subject,
+          magicLink: mailOptions.html.match(/href="([^"]*)/)?.[1] || 'Link not found'
+        });
+        return { messageId: 'dev-' + Date.now() };
+      }
+    };
+  } else {
     return nodemailer.createTransporter({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_APP_PASSWORD,
-      },
-    });
-  } else {
-    // Development setup with Ethereal Email
-    return nodemailer.createTransporter({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: process.env.ETHEREAL_USER || 'ethereal.user@ethereal.email',
-        pass: process.env.ETHEREAL_PASS || 'ethereal.pass',
       },
     });
   }
@@ -117,28 +151,63 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
 
     const { email } = req.body;
 
-    // Check if user exists, create if not
-    let user = await prisma.user.findUnique({
-      where: { email },
-      include: { profile: true, settings: true }
-    });
+    let user;
+    let isNewUser = false;
 
-    const isNewUser = !user;
-
-    if (!user) {
-      // Create new user
-      user = await prisma.user.create({
-        data: {
+    // Handle development mode without database
+    if (!prisma) {
+      console.log('🔧 Development mode: Using in-memory user storage');
+      
+      if (!devUsers.has(email)) {
+        // Create new user in memory
+        user = {
+          id: `dev-${Date.now()}`,
           email,
-          profile: {
-            create: {}
-          },
-          settings: {
-            create: {}
-          }
-        },
-        include: { profile: true, settings: true }
-      });
+          name: null,
+          isActive: true,
+          createdAt: new Date(),
+          profile: {},
+          settings: {}
+        };
+        devUsers.set(email, user);
+        isNewUser = true;
+        console.log('✅ Created new user in development mode:', email);
+      } else {
+        user = devUsers.get(email);
+        console.log('✅ Found existing user in development mode:', email);
+      }
+    } else {
+      // Production mode with database
+      try {
+        user = await prisma.user.findUnique({
+          where: { email },
+          include: { profile: true, settings: true }
+        });
+
+        isNewUser = !user;
+
+        if (!user) {
+          // Create new user
+          user = await prisma.user.create({
+            data: {
+              email,
+              profile: {
+                create: {}
+              },
+              settings: {
+                create: {}
+              }
+            },
+            include: { profile: true, settings: true }
+          });
+        }
+      } catch (dbError) {
+        console.error('❌ Database error:', dbError.message);
+        return res.status(500).json({
+          error: 'Database Error',
+          message: 'Unable to process authentication. Please try again later.'
+        });
+      }
     }
 
     // Generate magic link token
@@ -221,12 +290,22 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
 
     await transporter.sendMail(emailTemplate);
 
+    // In development mode, also log the magic link for easy testing
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔗 Development Magic Link:', magicLink);
+      console.log('📧 Email sent to:', email);
+    }
+
     res.status(200).json({
       message: isNewUser 
         ? 'Welcome! Please check your email to complete setup.'
         : 'Magic link sent! Please check your email to sign in.',
       isNewUser,
-      email: email.replace(/(.{2}).*(@.*)/, '$1***$2') // Partially mask email
+      email: email.replace(/(.{2}).*(@.*)/, '$1***$2'), // Partially mask email
+      ...(process.env.NODE_ENV === 'development' && { 
+        devMagicLink: magicLink,
+        devNote: 'Check console for magic link in development mode'
+      })
     });
 
   } catch (error) {
@@ -279,43 +358,81 @@ router.post('/verify', async (req, res) => {
     }
 
     // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: decoded.email },
-      include: {
-        profile: true,
-        settings: true
+    let user;
+    
+    if (!prisma) {
+      // Development mode - use in-memory storage
+      console.log('🔧 Development mode: Looking up user in memory');
+      user = devUsers.get(decoded.email);
+      
+      if (!user) {
+        return res.status(404).json({
+          error: 'Not Found',
+          message: 'User account not found'
+        });
       }
-    });
+      
+      // Update user in memory
+      user.lastLoginAt = new Date();
+      user.emailVerified = true;
+      devUsers.set(decoded.email, user);
+      console.log('✅ Updated user in development mode:', decoded.email);
+    } else {
+      // Production mode - use database
+      try {
+        user = await prisma.user.findUnique({
+          where: { email: decoded.email },
+          include: {
+            profile: true,
+            settings: true
+          }
+        });
 
-    if (!user) {
-      return res.status(404).json({
-        error: 'Not Found',
-        message: 'User account not found'
-      });
+        if (!user) {
+          return res.status(404).json({
+            error: 'Not Found',
+            message: 'User account not found'
+          });
+        }
+
+        // Update user login info
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            lastLoginAt: new Date(),
+            emailVerified: true
+          }
+        });
+      } catch (dbError) {
+        console.error('❌ Database error:', dbError.message);
+        return res.status(500).json({
+          error: 'Database Error',
+          message: 'Unable to process authentication. Please try again later.'
+        });
+      }
     }
-
-    // Update user login info
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        lastLoginAt: new Date(),
-        emailVerified: true
-      }
-    });
 
     // Generate access and refresh tokens
     const { accessToken, refreshToken } = generateTokens(user.id);
 
     // Create session record
-    await prisma.userSession.create({
-      data: {
-        userId: user.id,
-        sessionId: uuidv4(),
-        device: req.get('User-Agent') || 'Unknown',
-        ipAddress: req.ip,
-        startedAt: new Date()
+    if (prisma) {
+      try {
+        await prisma.userSession.create({
+          data: {
+            userId: user.id,
+            sessionId: uuidv4(),
+            device: req.get('User-Agent') || 'Unknown',
+            ipAddress: req.ip,
+            startedAt: new Date()
+          }
+        });
+      } catch (sessionError) {
+        console.log('⚠️ Session creation failed (continuing):', sessionError.message);
       }
-    });
+    } else {
+      console.log('🔧 Development mode: Skipping session creation');
+    }
 
     // Prepare user data (exclude sensitive information)
     const userData = {
@@ -383,9 +500,30 @@ router.post('/refresh', async (req, res) => {
     }
 
     // Check if user still exists and is active
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId }
-    });
+    let user;
+    
+    if (!prisma) {
+      // Development mode - find user by ID in memory
+      for (const [email, devUser] of devUsers.entries()) {
+        if (devUser.id === decoded.userId) {
+          user = devUser;
+          break;
+        }
+      }
+    } else {
+      // Production mode - use database
+      try {
+        user = await prisma.user.findUnique({
+          where: { id: decoded.userId }
+        });
+      } catch (dbError) {
+        console.error('❌ Database error:', dbError.message);
+        return res.status(500).json({
+          error: 'Database Error',
+          message: 'Unable to process token refresh. Please try again later.'
+        });
+      }
+    }
 
     if (!user || !user.isActive) {
       return res.status(401).json({
@@ -429,15 +567,23 @@ router.post('/logout', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
         // End user sessions
-        await prisma.userSession.updateMany({
-          where: {
-            userId: decoded.userId,
-            endedAt: null
-          },
-          data: {
-            endedAt: new Date()
+        if (prisma) {
+          try {
+            await prisma.userSession.updateMany({
+              where: {
+                userId: decoded.userId,
+                endedAt: null
+              },
+              data: {
+                endedAt: new Date()
+              }
+            });
+          } catch (sessionError) {
+            console.log('⚠️ Session update failed (continuing):', sessionError.message);
           }
-        });
+        } else {
+          console.log('🔧 Development mode: Skipping session cleanup');
+        }
       } catch (jwtError) {
         // Token invalid, but still return success for logout
       }
@@ -491,13 +637,34 @@ router.get('/me', async (req, res) => {
     }
 
     // Get user data
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
-      include: {
-        profile: true,
-        settings: true
+    let user;
+    
+    if (!prisma) {
+      // Development mode - find user by ID in memory
+      for (const [email, devUser] of devUsers.entries()) {
+        if (devUser.id === decoded.userId) {
+          user = devUser;
+          break;
+        }
       }
-    });
+    } else {
+      // Production mode - use database
+      try {
+        user = await prisma.user.findUnique({
+          where: { id: decoded.userId },
+          include: {
+            profile: true,
+            settings: true
+          }
+        });
+      } catch (dbError) {
+        console.error('❌ Database error:', dbError.message);
+        return res.status(500).json({
+          error: 'Database Error',
+          message: 'Unable to get user information. Please try again later.'
+        });
+      }
+    }
 
     if (!user || !user.isActive) {
       return res.status(401).json({

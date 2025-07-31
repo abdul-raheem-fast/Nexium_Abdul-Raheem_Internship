@@ -27,6 +27,9 @@ export default function VerifyPage() {
         localStorage.setItem('accessToken', response.tokens.accessToken);
         localStorage.setItem('refreshToken', response.tokens.refreshToken);
         
+        // Trigger auth change event
+        window.dispatchEvent(new Event('authChange'));
+        
         setStatus('success');
         setMessage('Successfully signed in! Redirecting to dashboard...');
         
@@ -109,7 +112,7 @@ export default function VerifyPage() {
             
             <button
               onClick={handleRetry}
-              className="w-full bg-primary-blue hover:bg-primary-blue/90 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
             >
               Back to Sign In
             </button>

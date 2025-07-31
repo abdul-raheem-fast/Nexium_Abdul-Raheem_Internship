@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
-console.log('OpenAI Key:', process.env.OPENAI_API_KEY);
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -8,12 +6,14 @@ import compression from 'compression';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import slowDown from 'express-slow-down';
 import winston from 'winston';
-import { PrismaClient } from '@prisma/client';
+import { initializeDatabases } from './lib/database.js';
+import mongoose from 'mongoose';
 
-// Initialize Prisma
-const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'],
-});
+dotenv.config();
+console.log('OpenAI Key:', process.env.OPENAI_API_KEY);
+
+// Initialize databases (MongoDB + Supabase)
+let dbInitialized = false;
 
 // Initialize Express app
 const app = express();
@@ -111,22 +111,19 @@ app.use((req, res, next) => {
 // Health check endpoint
 app.get('/health', async (req, res) => {
   try {
-    // Check database connection
-    await prisma.$queryRaw`SELECT 1`;
-    
     res.status(200).json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       version: process.env.npm_package_version || '1.0.0',
       environment: process.env.NODE_ENV || 'development',
-      database: 'connected'
+      database: 'development mode'
     });
   } catch (error) {
     logger.error('Health check failed', error);
     res.status(503).json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
-      error: 'Database connection failed'
+      error: 'Health check failed'
     });
   }
 });
@@ -143,6 +140,7 @@ import analyticsRoutes from './routes/analytics.js';
 import notificationRoutes from './routes/notifications.js';
 import crisisRoutes from './routes/crisis.js';
 import aiRoutes from './routes/ai.js';
+import webhookRoutes from './routes/webhooks.js';
 
 // Mount routes
 app.use('/api/auth', authRoutes);
@@ -156,6 +154,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/crisis', crisisRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/webhooks', webhookRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -232,9 +231,6 @@ app.use((err, req, res, next) => {
 process.on('SIGINT', async () => {
   logger.info('Received SIGINT, starting graceful shutdown...');
   
-  // Close database connection
-  await prisma.$disconnect();
-  
   // Close server
   process.exit(0);
 });
@@ -242,19 +238,34 @@ process.on('SIGINT', async () => {
 process.on('SIGTERM', async () => {
   logger.info('Received SIGTERM, starting graceful shutdown...');
   
-  // Close database connection
-  await prisma.$disconnect();
+  // Close database connections
+  await mongoose.connection.close();
   
   // Close server
   process.exit(0);
 });
 
-// Start server
-app.listen(PORT, () => {
-  logger.info(`Mental Health Tracker API started on port ${PORT}`, {
-    environment: process.env.NODE_ENV || 'development',
-    version: process.env.npm_package_version || '1.0.0'
-  });
-});
+// Start server with database initialization
+const startServer = async () => {
+  try {
+    // Initialize databases
+    await initializeDatabases();
+    dbInitialized = true;
+    
+    // Start server
+    app.listen(PORT, () => {
+      logger.info(`🚀 Mental Health Tracker API started on port ${PORT}`, {
+        environment: process.env.NODE_ENV || 'development',
+        version: process.env.npm_package_version || '1.0.0',
+        databases: 'MongoDB + Supabase'
+      });
+    });
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app; 

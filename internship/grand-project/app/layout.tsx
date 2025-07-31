@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import './globals.css';
+import { AuthProvider, useAuth } from './lib/AuthContext';
 
 // Metadata moved to a constant since we can't export it with 'use client'
 const siteMetadata = {
@@ -9,15 +10,11 @@ const siteMetadata = {
   description: 'AI-powered platform for proactive mental wellness',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+function LayoutContent({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
-
     // Close mobile menu when resizing to desktop
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -30,8 +27,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    
+    // Trigger auth change event
+    window.dispatchEvent(new Event('authChange'));
+    
     window.location.href = '/login';
   };
 
@@ -47,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="w-full bg-white shadow-sm sticky top-0 z-50">
           <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="text-lg sm:text-xl md:text-2xl font-bold text-primary-blue tracking-tight">🧠 Mental Health Tracker</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600 tracking-tight">🧠 Mental Health Tracker</span>
             </div>
             
             {/* Mobile menu button */}
@@ -67,36 +68,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             
             {/* Desktop navigation */}
             <nav className="hidden md:flex gap-4 lg:gap-6 text-sm lg:text-base font-medium items-center">
-              <a href="/dashboard" className="hover:text-primary-blue transition-colors px-2 py-1 rounded">Dashboard</a>
-              <a href="/mood" className="hover:text-primary-blue transition-colors px-2 py-1 rounded">Mood</a>
-              <a href="/insights" className="hover:text-primary-blue transition-colors px-2 py-1 rounded">AI Insights</a>
-              <a href="/profile" className="hover:text-primary-blue transition-colors px-2 py-1 rounded">Profile</a>
-              {isLoggedIn && (
-                <button
-                  onClick={handleLogout}
-                  className="ml-2 lg:ml-4 px-3 lg:px-4 py-1.5 lg:py-2 rounded bg-error text-white font-semibold hover:bg-error/90 transition-colors text-sm lg:text-base"
-                >
-                  Logout
-                </button>
-              )}
+              <a href="/dashboard" className="hover:text-blue-600 transition-colors px-2 py-1 rounded">Dashboard</a>
+              <a href="/mood" className="hover:text-blue-600 transition-colors px-2 py-1 rounded">Mood</a>
+              <a href="/insights" className="hover:text-blue-600 transition-colors px-2 py-1 rounded">AI Insights</a>
+                             <a href="/profile" className="hover:text-blue-600 transition-colors px-2 py-1 rounded">Profile</a>
+               {isAuthenticated && (
+                 <button
+                   onClick={handleLogout}
+                   className="ml-2 lg:ml-4 px-3 lg:px-4 py-1.5 lg:py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-sm lg:text-base"
+                 >
+                   Logout
+                 </button>
+               )}
             </nav>
           </div>
           
           {/* Mobile navigation */}
           {isMenuOpen && (
             <nav className="md:hidden flex flex-col bg-white py-4 px-4 border-t border-neutral-200 shadow-lg">
-              <a href="/dashboard" className="py-3 px-2 hover:text-primary-blue hover:bg-neutral-50 transition-colors rounded text-base">Dashboard</a>
-              <a href="/mood" className="py-3 px-2 hover:text-primary-blue hover:bg-neutral-50 transition-colors rounded text-base">Mood</a>
-              <a href="/insights" className="py-3 px-2 hover:text-primary-blue hover:bg-neutral-50 transition-colors rounded text-base">AI Insights</a>
-              <a href="/profile" className="py-3 px-2 hover:text-primary-blue hover:bg-neutral-50 transition-colors rounded text-base">Profile</a>
-              {isLoggedIn && (
-                <button
-                  onClick={handleLogout}
-                  className="mt-3 mx-2 px-4 py-2 rounded bg-error text-white font-semibold hover:bg-error/90 transition-colors text-left text-base"
-                >
-                  Logout
-                </button>
-              )}
+              <a href="/dashboard" className="py-3 px-2 hover:text-blue-600 hover:bg-neutral-50 transition-colors rounded text-base">Dashboard</a>
+              <a href="/mood" className="py-3 px-2 hover:text-blue-600 hover:bg-neutral-50 transition-colors rounded text-base">Mood</a>
+              <a href="/insights" className="py-3 px-2 hover:text-blue-600 hover:bg-neutral-50 transition-colors rounded text-base">AI Insights</a>
+                             <a href="/profile" className="py-3 px-2 hover:text-blue-600 hover:bg-neutral-50 transition-colors rounded text-base">Profile</a>
+               {isAuthenticated && (
+                 <button
+                   onClick={handleLogout}
+                   className="mt-3 mx-2 px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-left text-base"
+                 >
+                   Logout
+                 </button>
+               )}
             </nav>
           )}
         </header>
@@ -107,20 +108,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6">
               <div className="text-center md:text-left">
-                <h3 className="text-base sm:text-lg font-semibold text-primary-blue">Mental Health Tracker</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-blue-600">Mental Health Tracker</h3>
                 <p className="text-xs sm:text-sm text-neutral-500 mt-1">AI-powered platform for proactive mental wellness</p>
               </div>
               <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-                <a href="/" className="text-xs sm:text-sm text-neutral-700 hover:text-primary-blue transition-colors px-2 py-1 rounded">Home</a>
-                <a href="/dashboard" className="text-xs sm:text-sm text-neutral-700 hover:text-primary-blue transition-colors px-2 py-1 rounded">Dashboard</a>
-                <a href="/profile" className="text-xs sm:text-sm text-neutral-700 hover:text-primary-blue transition-colors px-2 py-1 rounded">Profile</a>
+                <a href="/" className="text-xs sm:text-sm text-neutral-700 hover:text-blue-600 transition-colors px-2 py-1 rounded">Home</a>
+                <a href="/dashboard" className="text-xs sm:text-sm text-neutral-700 hover:text-blue-600 transition-colors px-2 py-1 rounded">Dashboard</a>
+                <a href="/profile" className="text-xs sm:text-sm text-neutral-700 hover:text-blue-600 transition-colors px-2 py-1 rounded">Profile</a>
               </div>
             </div>
             <div className="mt-4 sm:mt-6 text-center text-xs text-neutral-500">
               © {new Date().getFullYear()} Mental Health Tracker. All rights reserved.
             </div>
           </div>
-        </footer>
+                 </footer>
+       </body>
+     </html>
+   );
+ }
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <body className="font-sans bg-neutral-50 text-neutral-900 min-h-screen">
+        <AuthProvider>
+          <LayoutContent>
+            {children}
+          </LayoutContent>
+        </AuthProvider>
       </body>
     </html>
   );

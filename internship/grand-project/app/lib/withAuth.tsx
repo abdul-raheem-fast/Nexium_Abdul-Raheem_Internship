@@ -13,7 +13,17 @@ export default function withAuth<P>(Component: React.ComponentType<P>) {
           const accessToken = localStorage.getItem('accessToken');
           
           if (!accessToken) {
-            window.location.href = '/login';
+            // Only redirect if we're not already on the login page
+            if (window.location.pathname !== '/login') {
+              window.location.href = '/login';
+            }
+            return;
+          }
+
+          // For development, just check if token exists
+          // In production, you'd want to verify the token with the server
+          if (process.env.NODE_ENV === 'development') {
+            setIsAuthenticated(true);
             return;
           }
 
@@ -22,9 +32,11 @@ export default function withAuth<P>(Component: React.ComponentType<P>) {
             await getUserInfo();
             setIsAuthenticated(true);
           } catch (error) {
+            console.log('Auth check failed:', error);
             // Token is invalid or expired, redirect to login
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            window.dispatchEvent(new Event('authChange'));
             window.location.href = '/login';
           }
         }
@@ -37,7 +49,7 @@ export default function withAuth<P>(Component: React.ComponentType<P>) {
     if (isAuthenticated === null) {
       return (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-blue"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       );
     }

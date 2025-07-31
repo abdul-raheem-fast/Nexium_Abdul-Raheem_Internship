@@ -38,10 +38,10 @@ export default function LoginPage() {
     <div className="min-h-[90vh] flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10 transform transition-all duration-300 hover:shadow-2xl border border-neutral-100">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-blue/10 rounded-full mb-4">
-            <FiUser className="h-8 w-8 text-primary-blue" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <FiUser className="h-8 w-8 text-blue-600" />
           </div>
-          <h1 className="text-3xl font-bold text-primary-blue mb-2">
+          <h1 className="text-3xl font-bold text-blue-600 mb-2">
             {emailSent ? 'Check Your Email' : 'Welcome Back'}
           </h1>
           <p className="text-neutral-500">
@@ -95,8 +95,8 @@ export default function LoginPage() {
           <>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none group-focus-within:text-primary-blue transition-colors">
-                  <FiMail className="h-5 w-5 text-neutral-400 group-focus-within:text-primary-blue transition-colors" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none group-focus-within:text-blue-600 transition-colors">
+                  <FiMail className="h-5 w-5 text-neutral-400 group-focus-within:text-blue-600 transition-colors" />
                 </div>
                 <input
                   type="email"
@@ -104,15 +104,15 @@ export default function LoginPage() {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-blue focus:border-primary-blue transition-all outline-none bg-white/80 backdrop-blur-sm"
+                  className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all outline-none bg-white/80 backdrop-blur-sm"
                 />
-                <label className={`absolute text-xs font-medium text-primary-blue ${email ? 'opacity-100 -top-2 left-2 px-1 bg-white' : 'opacity-0'} transition-all duration-200`}>Email</label>
+                <label className={`absolute text-xs font-medium text-blue-600 ${email ? 'opacity-100 -top-2 left-2 px-1 bg-white' : 'opacity-0'} transition-all duration-200`}>Email</label>
               </div>
               
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 w-full bg-gradient-to-r from-primary-blue to-primary-teal text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:from-primary-teal hover:to-primary-blue transition-all transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-md hover:shadow-lg"
+                className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 hover:from-blue-700 hover:to-blue-800 transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-md hover:shadow-xl"
               >
                 {loading ? (
                   <>
@@ -141,9 +141,9 @@ export default function LoginPage() {
         <div className="mt-8 text-center">
           <p className="text-xs text-neutral-500">
             By signing in, you agree to our{' '}
-            <a href="/terms" className="text-primary-blue hover:underline underline-offset-4">Terms of Service</a>{' '}
-            and{' '}
-            <a href="/privacy" className="text-primary-blue hover:underline underline-offset-4">Privacy Policy</a>
+                         <a href="/terms" className="text-blue-600 hover:underline underline-offset-4">Terms of Service</a>{' '}
+             and{' '}
+             <a href="/privacy" className="text-blue-600 hover:underline underline-offset-4">Privacy Policy</a>
           </p>
         </div>
       </div>
