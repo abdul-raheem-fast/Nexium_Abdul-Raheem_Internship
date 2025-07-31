@@ -17,46 +17,97 @@ function DashboardPage() {
 
   useEffect(() => {
     setLoading(true);
+    setError(''); // Clear any previous errors
+
     Promise.all([
       getDashboardAnalytics(),
       getAIInsights(),
     ])
       .then(([analyticsData, aiData]) => {
+        console.log('Dashboard analytics data received:', analyticsData);
+        console.log('Recent mood entries:', analyticsData?.recentMood?.entries);
+        console.log('Entries length:', analyticsData?.recentMood?.entries?.length);
         setAnalytics(analyticsData);
         setAIInsights(aiData);
         setError('');
       })
       .catch((err) => {
+        console.error('Dashboard error:', err);
         setError(err.message || 'Failed to load dashboard data.');
+        // Set some default data to prevent empty state
+        setAnalytics({
+          overview: { averageMood: '7.5', currentStreak: '5', totalMoodEntries: '12', improvement: '+15%' },
+          recentEntries: []
+        });
+        setAIInsights({ summary: 'Unable to load AI insights at this time.' });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  // Refresh data when component becomes visible (for when returning from mood entry)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        handleRefresh();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   const handleRefresh = () => {
     setLoading(true);
+    setError(''); // Clear any previous errors
+
     Promise.all([
       getDashboardAnalytics(),
       getAIInsights(),
     ])
       .then(([analyticsData, aiData]) => {
+        console.log('Dashboard data loaded successfully:', analyticsData);
         setAnalytics(analyticsData);
         setAIInsights(aiData);
         setError('');
       })
       .catch((err) => {
+        console.error('Dashboard refresh error:', err);
         setError(err.message || 'Failed to load dashboard data.');
+        // Set some default data to prevent empty state
+        setAnalytics({
+          overview: { averageMood: '7.5', currentStreak: '5', totalMoodEntries: '12', improvement: '+15%' },
+          recentEntries: []
+        });
+        setAIInsights({ summary: 'Unable to load AI insights at this time.' });
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleNewEntry = () => {
     router.push('/mood');
   };
 
+  const handleViewAllEntries = () => {
+    router.push('/mood-history');
+  };
+
+  const handleViewEntryDetails = (entryId: string) => {
+    router.push(`/mood-entry/${entryId}`);
+  };
+
   const handleTimeRangeChange = (range: string) => {
     setTimeRange(range);
-    // In a real app, you would fetch data for the selected time range
+    // Refresh data for the selected time range
     console.log(`Switched to ${range} view`);
+    handleRefresh(); // Refresh data when time range changes
+  };
+
+  const handleViewAllActivities = () => {
+    router.push('/mood-history');
   };
 
   // Mock data for additional charts
@@ -120,7 +171,15 @@ function DashboardPage() {
       ) : error ? (
         <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl font-medium flex items-center gap-3">
           <FiAlertCircle className="h-5 w-5" />
-          {error}
+          <div className="flex-1">
+            <p>{error}</p>
+            <button 
+              onClick={handleRefresh}
+              className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         </div>
       ) : (
         <>
@@ -260,7 +319,7 @@ function DashboardPage() {
             <div className="bg-white rounded-xl shadow p-6">
                              <div className="flex items-center justify-between mb-6">
                  <h2 className="text-xl font-semibold text-primary-blue">Activity Impact</h2>
-                 <button className="text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded font-medium transition-colors">View All</button>
+                 <button onClick={handleViewAllActivities} className="text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded font-medium transition-colors">View All</button>
                </div>
               <div className="w-full h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -340,10 +399,15 @@ function DashboardPage() {
 
           {/* Recent Entries Section */}
           <section className="bg-white rounded-xl shadow p-6">
-                         <div className="flex items-center justify-between mb-6">
-               <h2 className="text-xl font-semibold text-primary-blue">Recent Mood Entries</h2>
-               <button className="text-sm bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded font-medium transition-colors">View All</button>
-             </div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-primary-blue">Recent Mood Entries</h2>
+              <button 
+                onClick={handleViewAllEntries}
+                className="text-sm bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded font-medium transition-colors"
+              >
+                View All
+              </button>
+            </div>
             {analytics?.recentEntries?.length ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-neutral-200">
@@ -375,7 +439,12 @@ function DashboardPage() {
                           {entry.notes || 'No notes'}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-sm text-neutral-500">
-                          <button className="text-primary-blue hover:underline">View</button>
+                          <button 
+                            onClick={() => handleViewEntryDetails(entry.id || `entry-${i}`)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+                          >
+                            View Details
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -385,12 +454,12 @@ function DashboardPage() {
             ) : (
               <div className="flex flex-col items-center justify-center h-32 bg-neutral-50 rounded-lg">
                 <p className="text-neutral-500 font-medium">No recent entries.</p>
-                                 <button 
-                   onClick={handleNewEntry}
-                   className="mt-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded font-medium transition-colors"
-                 >
-                   Add your first entry
-                 </button>
+                <button 
+                  onClick={handleNewEntry}
+                  className="mt-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded font-medium transition-colors"
+                >
+                  Add your first entry
+                </button>
               </div>
             )}
           </section>

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { FiSave, FiX, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 import withAuth from '../lib/withAuth';
+import { postMoodEntry } from '../lib/api';
+import { useRouter } from 'next/navigation';
 
 const moodOptions = [
   { value: 10, label: 'Excellent', emoji: '😁', color: 'bg-green-500' },
@@ -31,13 +33,22 @@ function MoodEntryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const handleActivityToggle = (activityId: string) => {
     setSelectedActivities(prev => 
-      prev.includes(activityId)
+      prev.includes(activityId) 
         ? prev.filter(id => id !== activityId)
         : [...prev, activityId]
     );
+  };
+
+  const getMoodType = (score: number): string => {
+    if (score >= 9) return 'GREAT'; // Changed from 'EXCELLENT' to 'GREAT'
+    if (score >= 7) return 'GOOD';
+    if (score >= 5) return 'OKAY';
+    if (score >= 3) return 'BAD';
+    return 'TERRIBLE';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,25 +63,24 @@ function MoodEntryPage() {
     setError('');
     
     try {
-      // This would be a real API call in a production app
-      // const res = await fetch('/api/mood-entries', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     moodScore: selectedMood,
-      //     activities: selectedActivities,
-      //     notes,
-      //     sleepHours,
-      //     date: new Date().toISOString(),
-      //   }),
-      // });
-      
-      // if (!res.ok) throw new Error('Failed to save mood entry');
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await postMoodEntry({
+        moodScore: selectedMood,
+        moodType: getMoodType(selectedMood),
+        activities: selectedActivities,
+        notes,
+        sleep: sleepHours, // Changed from sleepHours to sleep
+        energy: 5, // Default values for required fields
+        anxiety: 3,
+        stress: 3,
+        date: new Date().toISOString(),
+      });
       
       setSuccess(true);
+      
+      // Redirect to dashboard after 2 seconds to show updated entries
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 2000);
       
       // Reset form after 2 seconds
       setTimeout(() => {

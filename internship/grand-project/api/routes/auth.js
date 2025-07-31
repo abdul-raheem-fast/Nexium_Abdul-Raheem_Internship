@@ -7,7 +7,6 @@ import { PrismaClient } from '@prisma/client';
 import { body, validationResult } from 'express-validator';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
 import createDefaultAnalytics from '../create-default-analytics.js';
-import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -172,14 +171,13 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
           .replace(/[._-]/g, ' ')
           .replace(/\b\w/g, l => l.toUpperCase());
         
-        // Create new user in memory with default data
-        const newObjectId = new mongoose.Types.ObjectId();
+        // Create new user in development mode
         user = {
-          id: newObjectId.toString(),
+          id: `dev_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // Use CUID-like format
           email,
           name: extractedName,
-          isActive: true,
           emailVerified: false,
+          isActive: true,
           createdAt: new Date(),
           updatedAt: new Date(),
           profile: {
@@ -189,7 +187,7 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
             triggers: [],
             copingStrategies: [
               "Deep breathing exercises",
-              "Take a short walk", 
+              "Take a short walk",
               "Listen to calming music",
               "Practice gratitude"
             ],
