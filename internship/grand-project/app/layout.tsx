@@ -37,14 +37,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-      <body className="font-sans bg-neutral-50 text-neutral-900 min-h-screen">
+    <>
         <header className="w-full bg-white shadow-sm sticky top-0 z-50">
           <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2">
@@ -121,11 +114,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
               © {new Date().getFullYear()} Mental Health Tracker. All rights reserved.
             </div>
           </div>
-                 </footer>
-       </body>
-     </html>
-   );
- }
+        </footer>
+      </>
+    );
+  }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

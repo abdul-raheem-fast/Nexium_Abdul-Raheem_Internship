@@ -3,6 +3,11 @@
 **Internship Project by Muhammad Abdul Raheem Khan**  
 **Nexium - Full Stack Development Internship**
 
+**Contact Information:**
+- **LinkedIn**: [@abdul-raheem-fast](https://www.linkedin.com/in/abdul-raheem-fast)
+- **GitHub**: [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)  
+- **Email**: abdulraheemghauri@gmail.com
+
 ---
 
 ## 📋 **Project Overview**
@@ -429,9 +434,9 @@ This project is developed as part of the Nexium Full Stack Development Internshi
 ## 📞 **Support & Contact**
 
 **Developer**: Muhammad Abdul Raheem Khan  
-**Email**: [Your Email]  
-**LinkedIn**: [Your LinkedIn]  
-**GitHub**: [Your GitHub]
+**Email**: abdulraheemghauri@gmail.com  
+**LinkedIn**: [@abdul-raheem-fast](https://www.linkedin.com/in/abdul-raheem-fast)  
+**GitHub**: [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
 
 ---
 

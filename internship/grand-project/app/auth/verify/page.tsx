@@ -27,16 +27,21 @@ export default function VerifyPage() {
         localStorage.setItem('accessToken', response.tokens.accessToken);
         localStorage.setItem('refreshToken', response.tokens.refreshToken);
         
-        // Trigger auth change event
-        window.dispatchEvent(new Event('authChange'));
+        // Store user info if provided
+        if (response.user) {
+          localStorage.setItem('user', JSON.stringify(response.user));
+        }
         
         setStatus('success');
         setMessage('Successfully signed in! Redirecting to dashboard...');
         
+        // Trigger auth change event and redirect
+        window.dispatchEvent(new Event('authChange'));
+        
         // Redirect to dashboard after a brief delay
         setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 2000);
+          window.location.replace('/dashboard');
+        }, 800);
         
       } catch (error: any) {
         setStatus('error');

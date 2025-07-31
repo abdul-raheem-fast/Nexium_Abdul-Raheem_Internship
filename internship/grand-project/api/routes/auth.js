@@ -6,6 +6,8 @@ import nodemailer from 'nodemailer';
 import { PrismaClient } from '@prisma/client';
 import { body, validationResult } from 'express-validator';
 import { RateLimiterMemory } from 'rate-limiter-flexible';
+import createDefaultAnalytics from '../create-default-analytics.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -13,6 +15,12 @@ const router = express.Router();
 let prisma = null;
 
 const initializePrisma = async () => {
+  // Only use demo mode if explicitly set to true
+  if (process.env.DEMO_MODE === 'true') {
+    console.log('🎯 Demo mode: Using in-memory storage instead of Prisma database');
+    return null;
+  }
+  
   if (!process.env.DATABASE_URL) {
     console.log('⚠️ DATABASE_URL not provided - using development mode without database');
     return null;
@@ -159,19 +167,64 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
       console.log('🔧 Development mode: Using in-memory user storage');
       
       if (!devUsers.has(email)) {
-        // Create new user in memory
+        // Extract name from email (part before @)
+        const extractedName = email.split('@')[0]
+          .replace(/[._-]/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
+        
+        // Create new user in memory with default data
+        const newObjectId = new mongoose.Types.ObjectId();
         user = {
-          id: `dev-${Date.now()}`,
+          id: newObjectId.toString(),
           email,
-          name: null,
+          name: extractedName,
           isActive: true,
+          emailVerified: false,
           createdAt: new Date(),
-          profile: {},
-          settings: {}
+          updatedAt: new Date(),
+          profile: {
+            hasTherapist: false,
+            medications: [],
+            conditions: [],
+            triggers: [],
+            copingStrategies: [
+              "Deep breathing exercises",
+              "Take a short walk", 
+              "Listen to calming music",
+              "Practice gratitude"
+            ],
+            dataSharing: false,
+            anonymousMode: false
+          },
+          settings: {
+            emailNotifications: true,
+            pushNotifications: true,
+            reminderFrequency: 'DAILY',
+            moodTrackingEnabled: true,
+            dailyCheckIns: true,
+            weeklyReports: true,
+            dataRetentionDays: 365,
+            aiInsightsEnabled: true,
+            personalizedTips: true,
+            trendAnalysis: true,
+            crisisMode: false,
+            emergencyContacts: true
+          }
         };
         devUsers.set(email, user);
         isNewUser = true;
-        console.log('✅ Created new user in development mode:', email);
+        console.log('✅ Created new user in development mode:', email, 'Name:', extractedName);
+        
+        // Create default analytics for new user
+        if (isNewUser) {
+          setTimeout(async () => {
+            try {
+              await createDefaultAnalytics(user.id, email);
+            } catch (error) {
+              console.log('⚠️ Could not create default analytics:', error.message);
+            }
+          }, 1000); // Create analytics after a brief delay
+        }
       } else {
         user = devUsers.get(email);
         console.log('✅ Found existing user in development mode:', email);
@@ -187,19 +240,65 @@ router.post('/magic-link', validateEmail, checkValidation, async (req, res) => {
         isNewUser = !user;
 
         if (!user) {
-          // Create new user
+          // Create new user with extracted name and default data
+          // Extract name from email (part before @)
+          const extractedName = email.split('@')[0]
+            .replace(/[._-]/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+          
           user = await prisma.user.create({
             data: {
               email,
+              name: extractedName,
+              emailVerified: false,
+              isActive: true,
               profile: {
-                create: {}
+                create: {
+                  // Add some default profile data
+                  hasTherapist: false,
+                  medications: [],
+                  conditions: [],
+                  triggers: [],
+                  copingStrategies: [
+                    "Deep breathing exercises",
+                    "Take a short walk",
+                    "Listen to calming music",
+                    "Practice gratitude"
+                  ],
+                  dataSharing: false,
+                  anonymousMode: false
+                }
               },
               settings: {
-                create: {}
+                create: {
+                  emailNotifications: true,
+                  pushNotifications: true,
+                  reminderFrequency: 'DAILY',
+                  moodTrackingEnabled: true,
+                  dailyCheckIns: true,
+                  weeklyReports: true,
+                  dataRetentionDays: 365,
+                  aiInsightsEnabled: true,
+                  personalizedTips: true,
+                  trendAnalysis: true,
+                  crisisMode: false,
+                  emergencyContacts: true
+                }
               }
             },
             include: { profile: true, settings: true }
           });
+          
+          // Create default analytics for new user
+          if (user) {
+            setTimeout(async () => {
+              try {
+                await createDefaultAnalytics(user.id, email);
+              } catch (error) {
+                console.log('⚠️ Could not create default analytics:', error.message);
+              }
+            }, 1000); // Create analytics after a brief delay
+          }
         }
       } catch (dbError) {
         console.error('❌ Database error:', dbError.message);

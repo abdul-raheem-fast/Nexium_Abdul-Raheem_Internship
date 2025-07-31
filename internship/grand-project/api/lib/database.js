@@ -10,8 +10,6 @@ const connectMongoDB = async () => {
   
   try {
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
       socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     });
@@ -64,13 +62,14 @@ const testSupabaseConnection = async () => {
   }
   
   try {
-    // Test with a simple query that should work
+    // Test with a simple query to check if we can connect
     const { data, error } = await supabase
-      .from('information_schema.tables')
-      .select('table_name')
+      .from('users')
+      .select('id')
       .limit(1);
     
-    if (error) {
+    // If table doesn't exist, that's fine - connection is working
+    if (error && !error.message.includes('does not exist')) {
       console.log('⚠️ Supabase connection warning:', error.message);
       return false;
     } else {
@@ -91,19 +90,11 @@ const createSupabaseTables = async () => {
   }
 
   try {
-    // Create users table
-    const { error: usersError } = await supabase.rpc('create_users_table_if_not_exists');
-    if (usersError && !usersError.message.includes('already exists')) {
-      console.log('⚠️ Users table creation warning:', usersError.message);
-    }
-
-    // Create mood_entries table
-    const { error: moodError } = await supabase.rpc('create_mood_entries_table_if_not_exists');
-    if (moodError && !moodError.message.includes('already exists')) {
-      console.log('⚠️ Mood entries table creation warning:', moodError.message);
-    }
-
-    console.log('✅ Supabase tables initialized');
+    // Since we're using Prisma to manage the database schema,
+    // we don't need to create tables manually via Supabase functions
+    // Prisma already created all tables with 'npx prisma db push'
+    
+    console.log('✅ Supabase tables managed by Prisma (already created)');
   } catch (error) {
     console.log('⚠️ Supabase table creation error:', error.message);
   }

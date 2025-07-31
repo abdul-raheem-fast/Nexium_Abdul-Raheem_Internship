@@ -118,7 +118,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
       recentActivities,
       currentStreak,
       achievements,
-      todayAnalytics
+      todayAnalytics,
+      recentEntries
     ] = await Promise.all([
       // Total mood entries
       prisma.moodEntry.count({
@@ -219,6 +220,21 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
             date: today
           }
         }
+      }),
+      
+      // Recent entries for dashboard
+      prisma.moodEntry.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          moodScore: true,
+          moodType: true,
+          activities: true,
+          notes: true,
+          createdAt: true
+        }
       })
     ]);
 
@@ -257,6 +273,16 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
         weeklyMoodEntries[0].moodScore - weeklyMoodEntries[weeklyMoodEntries.length - 1].moodScore : 0
     } : null;
 
+    // Format recent mood data for charts
+    const recentMood = {
+      trend: weeklyTrend?.change > 0 ? 'improving' : weeklyTrend?.change < 0 ? 'declining' : 'stable',
+      average: weeklyTrend?.average || 0,
+      entries: weeklyMoodEntries.map(entry => ({
+        date: entry.createdAt.toISOString().split('T')[0],
+        mood: entry.moodScore
+      }))
+    };
+
     res.status(200).json({
       overview: {
         totalMoodEntries,
@@ -271,6 +297,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
         activitiesLast7Days: recentActivities,
         averages: recentAverages
       },
+      recentMood,
+      recentEntries,
       weeklyTrend,
       activeGoals: activeGoals.map(goal => ({
         ...goal,

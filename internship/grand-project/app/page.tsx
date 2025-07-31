@@ -4,23 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './lib/AuthContext';
 
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    // If logged in, redirect to dashboard
-    if (isAuthenticated) {
-      window.location.href = '/dashboard';
-    }
-  }, [isAuthenticated]);
-
-  // Show loading while checking auth
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
+  // Remove the redirect logic that's causing the loop
+  // Users can manually navigate to dashboard if they want
   return (
     <div className="flex flex-col gap-8 sm:gap-12 lg:gap-16">
       {/* Hero Section */}

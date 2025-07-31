@@ -21,19 +21,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    // Only check auth on mount, don't interfere with navigation
     checkAuth();
 
-    // Listen for auth changes
+    // Listen for auth changes but don't auto-check on every storage change
     const handleAuthChange = () => {
       checkAuth();
     };
 
     window.addEventListener('authChange', handleAuthChange);
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'accessToken') {
-        checkAuth();
-      }
-    });
 
     return () => {
       window.removeEventListener('authChange', handleAuthChange);

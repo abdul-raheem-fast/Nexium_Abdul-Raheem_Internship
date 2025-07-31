@@ -13,6 +13,7 @@ function DashboardPage() {
   const [aiInsights, setAIInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [timeRange, setTimeRange] = useState('week');
 
   useEffect(() => {
     setLoading(true);
@@ -52,6 +53,12 @@ function DashboardPage() {
     router.push('/mood');
   };
 
+  const handleTimeRangeChange = (range: string) => {
+    setTimeRange(range);
+    // In a real app, you would fetch data for the selected time range
+    console.log(`Switched to ${range} view`);
+  };
+
   // Mock data for additional charts
   const activityImpact = [
     { name: 'Exercise', impact: 8.5 },
@@ -87,20 +94,20 @@ function DashboardPage() {
       {/* Dashboard Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
         <h1 className="text-3xl font-bold text-blue-600">Your Wellness Dashboard</h1>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleRefresh}
-            className="flex items-center gap-2 bg-blue-100 hover:bg-blue-200 text-blue-600 px-4 py-2 rounded-lg transition-colors font-medium"
-          >
-            <FiRefreshCw className="h-4 w-4" /> Refresh
-          </button>
-          <button
-            onClick={handleNewEntry}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
-          >
-            <FiPlusCircle className="h-4 w-4" /> New Entry
-          </button>
-        </div>
+                 <div className="flex items-center gap-3">
+           <button
+             onClick={handleRefresh}
+             className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors font-medium"
+           >
+             <FiRefreshCw className="h-4 w-4" /> Refresh
+           </button>
+           <button
+             onClick={handleNewEntry}
+             className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+           >
+             <FiPlusCircle className="h-4 w-4" /> New Entry
+           </button>
+         </div>
       </div>
 
       {loading ? (
@@ -125,7 +132,7 @@ function DashboardPage() {
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Current Mood</p>
-                <p className="text-2xl font-bold text-blue-600">{analytics?.overview?.averageMood || '7.5'}/10</p>
+                                 <p className="text-2xl font-bold text-blue-600">{analytics?.overview?.averageMood || analytics?.recentActivity?.averages?.mood || '7.5'}/10</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
@@ -134,7 +141,7 @@ function DashboardPage() {
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Streak</p>
-                <p className="text-2xl font-bold text-green-600">{analytics?.overview?.streakDays || '5'} days</p>
+                                 <p className="text-2xl font-bold text-green-600">{analytics?.overview?.currentStreak || '5'} days</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
@@ -143,7 +150,7 @@ function DashboardPage() {
               </div>
               <div>
                 <p className="text-gray-500 text-sm">Total Entries</p>
-                <p className="text-2xl font-bold text-purple-600">{analytics?.overview?.totalEntries || '12'}</p>
+                                 <p className="text-2xl font-bold text-purple-600">{analytics?.overview?.totalMoodEntries || '12'}</p>
               </div>
             </div>
             <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 transform transition-all hover:scale-105">
@@ -160,18 +167,45 @@ function DashboardPage() {
           {/* Charts Section */}
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-xl shadow p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-blue-600">Mood Trends</h2>
-                <div className="flex gap-2">
-                  <button className="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-medium">Week</button>
-                  <button className="px-3 py-1 text-xs rounded-full bg-white text-gray-500 font-medium">Month</button>
-                  <button className="px-3 py-1 text-xs rounded-full bg-white text-gray-500 font-medium">Year</button>
-                </div>
-              </div>
-              {analytics?.moodHistory?.length ? (
+                             <div className="flex items-center justify-between mb-6">
+                 <h2 className="text-xl font-semibold text-blue-600">Mood Trends</h2>
+                 <div className="flex gap-2">
+                   <button 
+                     onClick={() => handleTimeRangeChange('week')}
+                     className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
+                       timeRange === 'week' 
+                         ? 'bg-blue-600 text-white' 
+                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                     }`}
+                   >
+                     Week
+                   </button>
+                   <button 
+                     onClick={() => handleTimeRangeChange('month')}
+                     className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
+                       timeRange === 'month' 
+                         ? 'bg-blue-600 text-white' 
+                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                     }`}
+                   >
+                     Month
+                   </button>
+                   <button 
+                     onClick={() => handleTimeRangeChange('year')}
+                     className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
+                       timeRange === 'year' 
+                         ? 'bg-blue-600 text-white' 
+                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                     }`}
+                   >
+                     Year
+                   </button>
+                 </div>
+               </div>
+              {analytics?.recentMood?.entries?.length ? (
                 <div className="w-full h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={analytics.moodHistory} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+                    <LineChart data={analytics.recentMood.entries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                       <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                       <YAxis domain={[1, 10]} tickCount={5} tick={{ fontSize: 12 }} />
@@ -181,7 +215,7 @@ function DashboardPage() {
                       />
                       <Line 
                         type="monotone" 
-                        dataKey="moodScore" 
+                        dataKey="mood" 
                         stroke="#2563eb" 
                         strokeWidth={3} 
                         dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }} 
@@ -213,16 +247,21 @@ function DashboardPage() {
                 <div className="flex flex-col items-center justify-center h-64 bg-neutral-50 rounded-lg">
                   <FiBarChart2 className="h-12 w-12 text-neutral-300 mb-3" />
                   <p className="text-neutral-500 font-medium">No mood data available yet</p>
-                  <button className="mt-4 text-primary-blue font-medium hover:underline">Add your first entry</button>
+                                     <button 
+                     onClick={handleNewEntry}
+                     className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                   >
+                     Add your first entry
+                   </button>
                 </div>
               )}
             </div>
 
             <div className="bg-white rounded-xl shadow p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-primary-blue">Activity Impact</h2>
-                <button className="text-sm text-primary-blue hover:underline">View All</button>
-              </div>
+                             <div className="flex items-center justify-between mb-6">
+                 <h2 className="text-xl font-semibold text-primary-blue">Activity Impact</h2>
+                 <button className="text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded font-medium transition-colors">View All</button>
+               </div>
               <div className="w-full h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={activityImpact} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
@@ -301,10 +340,10 @@ function DashboardPage() {
 
           {/* Recent Entries Section */}
           <section className="bg-white rounded-xl shadow p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-primary-blue">Recent Mood Entries</h2>
-              <button className="text-sm text-primary-blue hover:underline">View All</button>
-            </div>
+                         <div className="flex items-center justify-between mb-6">
+               <h2 className="text-xl font-semibold text-primary-blue">Recent Mood Entries</h2>
+               <button className="text-sm bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded font-medium transition-colors">View All</button>
+             </div>
             {analytics?.recentEntries?.length ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-neutral-200">
@@ -346,7 +385,12 @@ function DashboardPage() {
             ) : (
               <div className="flex flex-col items-center justify-center h-32 bg-neutral-50 rounded-lg">
                 <p className="text-neutral-500 font-medium">No recent entries.</p>
-                <button className="mt-2 text-primary-blue font-medium hover:underline">Add your first entry</button>
+                                 <button 
+                   onClick={handleNewEntry}
+                   className="mt-2 bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded font-medium transition-colors"
+                 >
+                   Add your first entry
+                 </button>
               </div>
             )}
           </section>

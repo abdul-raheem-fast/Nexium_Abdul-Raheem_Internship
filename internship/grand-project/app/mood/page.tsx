@@ -26,8 +26,16 @@ function MoodPage() {
   useEffect(() => {
     setEntriesLoading(true);
     getMoodEntries()
-      .then((data) => setEntries(data.entries || []))
-      .catch(() => setEntries([]))
+      .then((data) => {
+        console.log('Mood entries received:', data);
+        // Handle both direct array and wrapped array
+        const entries = Array.isArray(data) ? data : (data.entries || []);
+        setEntries(entries);
+      })
+      .catch((err) => {
+        console.error('Failed to load mood entries:', err);
+        setEntries([]);
+      })
       .finally(() => setEntriesLoading(false));
   }, [success]);
 

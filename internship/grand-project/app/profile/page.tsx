@@ -14,12 +14,18 @@ function ProfilePage() {
   useEffect(() => {
     setLoading(true);
     getUserInfo()
-      .then((data) => {
-        setUser(data.user);
-        setAiEnabled(!!data.user?.settings?.aiInsightsEnabled);
+      .then((userData) => {
+        console.log('User data received:', userData);
+        // Handle both direct user data and wrapped user data
+        const user = userData.user || userData;
+        setUser(user);
+        setAiEnabled(!!user?.settings?.aiInsightsEnabled);
         setError('');
       })
-      .catch((err) => setError(err.message || 'Failed to load user info.'))
+      .catch((err) => {
+        console.error('Failed to load user info:', err);
+        setError(err.message || 'Failed to load user info.');
+      })
       .finally(() => setLoading(false));
   }, []);
 

@@ -1,5 +1,8 @@
 # 🎨 Mental Health Tracker - Wireframes & UI Design Specifications
 
+**Internship Project by Muhammad Abdul Raheem Khan**  
+**Nexium - Full Stack Development Internship**
+
 <div align="center">
 
 ![Design System](https://img.shields.io/badge/Design%20System-Modern-purple?style=for-the-badge)

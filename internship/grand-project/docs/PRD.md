@@ -1,5 +1,8 @@
 # 🧠 Mental Health Tracker - Product Requirements Document (PRD)
 
+**Internship Project by Muhammad Abdul Raheem Khan**  
+**Nexium - Full Stack Development Internship**
+
 <div align="center">
 
 ![Mental Health](https://img.shields.io/badge/Mental%20Health-First-green?style=for-the-badge)

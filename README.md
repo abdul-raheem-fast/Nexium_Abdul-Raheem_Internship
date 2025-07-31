@@ -266,19 +266,9 @@ Each project may require specific environment variables for databases, APIs, and
 
 ---
 
-## 📚 Additional Resources
-
-- [Nexium Internship Guidelines](./docs/guidelines.md)
-- [Learning Notes & Best Practices](./docs/learning-notes.md)
-- [API Documentation](./docs/api-docs.md)
-- [Deployment & DevOps Guides](./docs/deployment.md)
-- [Troubleshooting & FAQ](./docs/troubleshooting.md)
-
----
-
 ## 🤝 Connect & Collaborate
 
-- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://linkedin.com/in/abdul-raheem-khan)
+- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://www.linkedin.com/in/abdul-raheem-fast)
 - **GitHub:** [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
 - **Email:** abdulraheemghauri@gmail.com
 
