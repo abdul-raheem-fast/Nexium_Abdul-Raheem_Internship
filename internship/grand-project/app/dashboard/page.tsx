@@ -102,9 +102,47 @@ function DashboardPage() {
 
   const handleTimeRangeChange = (range: string) => {
     setTimeRange(range);
-    // Refresh data for the selected time range
+    // Smooth client-side navigation - no full page reload
     console.log(`Switched to ${range} view`);
-    handleRefresh(); // Refresh data when time range changes
+    
+    // Update analytics data based on time range without server call
+    if (analytics?.recentMood?.entries) {
+      const now = new Date();
+      let filteredEntries = [...analytics.recentMood.entries];
+      
+      switch (range) {
+        case 'week':
+          filteredEntries = filteredEntries.filter(entry => {
+            const entryDate = new Date(entry.date);
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            return entryDate >= weekAgo;
+          });
+          break;
+        case 'month':
+          filteredEntries = filteredEntries.filter(entry => {
+            const entryDate = new Date(entry.date);
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            return entryDate >= monthAgo;
+          });
+          break;
+        case 'year':
+          filteredEntries = filteredEntries.filter(entry => {
+            const entryDate = new Date(entry.date);
+            const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+            return entryDate >= yearAgo;
+          });
+          break;
+      }
+      
+      // Update analytics with filtered data
+      setAnalytics(prev => ({
+        ...prev,
+        recentMood: {
+          ...prev?.recentMood,
+          entries: filteredEntries
+        }
+      }));
+    }
   };
 
   const handleViewAllActivities = () => {
