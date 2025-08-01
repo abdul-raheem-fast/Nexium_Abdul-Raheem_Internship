@@ -12,7 +12,7 @@
 
 ✅ **COMPLETED & DEPLOYED**
 
-[**🌟 Live Demo**](https://nexium-mental-health-tracker.vercel.app/) | [**📊 Dashboard**](https://nexium-mental-health-tracker.vercel.app/dashboard) | [**🔗 Webhooks**](https://nexium-mental-health-tracker.vercel.app/webhooks)
+[**🌟 Live Demo**](https://nexium-mental-health-tracker.vercel.app/) | [**📊 Dashboard**](https://nexium-mental-health-tracker.vercel.app/dashboard)
 
 </div>
 
