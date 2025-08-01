@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Nexium Dashboard - Modern UI with ShadCN",
   description: "A professional dashboard built with Next.js 15, ShadCN UI, and Tailwind CSS. Showcasing modern theming, responsive design, and advanced UI components.",
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

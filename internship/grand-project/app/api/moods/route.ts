@@ -109,18 +109,25 @@ async function createMockDataForUser(userId: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/moods - Starting request');
+    
     // Verify authentication
     const decoded = verifyToken(request);
+    console.log('POST /api/moods - Token verified for user:', decoded.email);
     
     const body = await request.json();
+    console.log('POST /api/moods - Request body:', body);
+    
     const { moodScore, moodType, energy, anxiety, stress, sleep, activities, notes } = body;
 
     // Connect to database
+    console.log('POST /api/moods - Connecting to database...');
     const db = await connectDB();
+    console.log('POST /api/moods - Database connected successfully');
 
     // Create mood entry
-    const moodEntry = new MoodEntry({
-      userId: decoded.email, // Add user ID
+    const moodEntryData = {
+      userId: decoded.email,
       moodScore,
       moodType,
       energy,
@@ -130,9 +137,14 @@ export async function POST(request: NextRequest) {
       activities,
       notes,
       createdAt: new Date(),
-    });
-
+    };
+    
+    console.log('POST /api/moods - Creating mood entry with data:', moodEntryData);
+    
+    const moodEntry = new MoodEntry(moodEntryData);
     await moodEntry.save();
+    
+    console.log('POST /api/moods - Mood entry saved successfully:', moodEntry._id);
 
     return NextResponse.json({
       success: true,
@@ -141,6 +153,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Mood entry error:', error);
+    console.error('Error stack:', error.stack);
     
     if (error.message === 'No authorization token provided' || error.message === 'Invalid token') {
       return NextResponse.json(
@@ -164,7 +177,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Failed to create mood entry' },
+      { error: 'Failed to create mood entry: ' + error.message },
       { status: 500 }
     );
   }
@@ -172,16 +185,24 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('GET /api/moods - Starting request');
+    
     // Verify authentication
     const decoded = verifyToken(request);
+    console.log('GET /api/moods - Token verified for user:', decoded.email);
     
     // Connect to database
+    console.log('GET /api/moods - Connecting to database...');
     const db = await connectDB();
+    console.log('GET /api/moods - Database connected successfully');
 
     // Get mood entries for the specific user, sorted by creation date (newest first)
+    console.log('GET /api/moods - Fetching mood entries for user:', decoded.email);
     const moodEntries = await MoodEntry.find({ userId: decoded.email })
       .sort({ createdAt: -1 })
       .exec();
+    
+    console.log('GET /api/moods - Found entries:', moodEntries.length);
 
     // If no entries found, create mock data for this user
     if (moodEntries.length === 0) {
@@ -193,12 +214,15 @@ export async function GET(request: NextRequest) {
         .sort({ createdAt: -1 })
         .exec();
       
+      console.log('GET /api/moods - Created and fetched new entries:', newEntries.length);
+      
       return NextResponse.json({
         success: true,
         moodEntries: newEntries,
       });
     }
 
+    console.log('GET /api/moods - Returning existing entries:', moodEntries.length);
     return NextResponse.json({
       success: true,
       moodEntries,
@@ -206,6 +230,7 @@ export async function GET(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Get moods error:', error);
+    console.error('Error stack:', error.stack);
     
     if (error.message === 'No authorization token provided' || error.message === 'Invalid token') {
       return NextResponse.json(
@@ -229,7 +254,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: 'Failed to get mood entries' },
+      { error: 'Failed to get mood entries: ' + error.message },
       { status: 500 }
     );
   }

@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
 const moodEntrySchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
   moodScore: {
     type: Number,
     required: true,
@@ -9,7 +13,7 @@ const moodEntrySchema = new mongoose.Schema({
   },
   moodType: {
     type: String,
-    enum: ['EXCELLENT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE'],
+    enum: ['EXCELLENT', 'GREAT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE'],
     required: true,
   },
   energy: {
