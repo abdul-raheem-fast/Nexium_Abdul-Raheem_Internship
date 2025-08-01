@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FiCheckCircle, FiAlertCircle, FiLoader } from 'react-icons/fi';
 import { verifyMagicLink } from '../../lib/api';
 
-export default function VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
@@ -131,5 +131,27 @@ export default function VerifyPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+          <FiLoader className="h-8 w-8 text-blue-600 animate-spin" />
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Loading...</h1>
+        <p className="text-gray-600">Please wait while we verify your link...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VerifyContent />
+    </Suspense>
   );
 }
