@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { getMoodEntry, deleteMoodEntry } from '../../lib/api';
 import withAuth from '../../lib/withAuth';
 import { FiArrowLeft, FiCalendar, FiActivity, FiFileText, FiEdit, FiTrash2 } from 'react-icons/fi';
 
@@ -21,23 +22,8 @@ function MoodEntryDetailPage() {
   const loadMoodEntry = async (id: string) => {
     try {
       setLoading(true);
-      // For now, we'll simulate loading the entry
-      // In a real app, you'd fetch from API
-      const mockEntry = {
-        id: id,
-        moodScore: 8,
-        moodType: 'GOOD',
-        energy: 7,
-        anxiety: 3,
-        stress: 4,
-        sleep: 8,
-        activities: ['Exercise', 'Meditation'],
-        notes: 'Great workout session, feeling energized!',
-        tags: ['productive', 'active'],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-      setEntry(mockEntry);
+      const response = await getMoodEntry(id);
+      setEntry(response.moodEntry);
       setError('');
     } catch (err: any) {
       setError(err.message || 'Failed to load mood entry');
@@ -65,10 +51,14 @@ function MoodEntryDetailPage() {
     router.push(`/mood-entry?edit=${entry.id}`);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this mood entry?')) {
-      // Delete logic here
-      router.push('/dashboard');
+      try {
+        await deleteMoodEntry(entry.id);
+        router.push('/dashboard');
+      } catch (err: any) {
+        setError(err.message || 'Failed to delete mood entry');
+      }
     }
   };
 

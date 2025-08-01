@@ -16,6 +16,18 @@ function MoodHistoryPage() {
     loadMoodEntries();
   }, []);
 
+  // Refresh data when component becomes visible (for when returning from mood entry)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadMoodEntries();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
   const loadMoodEntries = async () => {
     try {
       setLoading(true);

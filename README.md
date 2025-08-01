@@ -1,4 +1,4 @@
-# 🚀 Nexium AI-First Web Development Internship Portfolio
+# 🚀 Nexium AI-Driven Web Development Internship Portfolio
 
 <div align="center">
 
@@ -8,7 +8,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
-🎯 **A comprehensive portfolio showcasing 3 production-ready applications built during the Nexium AI-First Web Development Internship**
+🎯 **A comprehensive portfolio showcasing 3 production-ready applications built during the Nexium AI-Driven Web Development Internship**
 
 ✅ **COMPLETED & DEPLOYED**
 
@@ -18,7 +18,7 @@
 
 ## 🎯 Program Overview
 
-This repository contains all projects, assignments, and learning materials from the **Nexium AI-First Web Development Internship**. The program focuses on building modern, scalable web applications using cutting-edge technologies and AI-driven development practices over a comprehensive 30-day intensive learning experience.
+This repository contains all projects, assignments, and learning materials from the **Nexium AI-Driven Web Development Internship**. The program focuses on building modern, scalable web applications using cutting-edge technologies and AI-driven development practices over a comprehensive 30-day intensive learning experience.
 
 ### 🗓️ Program Structure
 - **Duration:** 30 Days Intensive Program

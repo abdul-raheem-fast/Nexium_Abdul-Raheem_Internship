@@ -202,7 +202,7 @@ This assignment successfully demonstrates:
 
 **🎯 Assignment 1 - Successfully Completed**
 
-*Built with ❤️ as part of the Nexium AI-First Web Development Internship*
+*Built with ❤️ as part of the Nexium AI-Driven Web Development Internship*
 
 **✨ Professional Quote Generator Application** ✅
 

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     });
 
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: 'Sign in to Mental Health Tracker',
       html: `
