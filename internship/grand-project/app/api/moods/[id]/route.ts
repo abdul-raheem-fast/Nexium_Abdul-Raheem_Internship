@@ -29,7 +29,6 @@ export async function GET(
   const { id } = await params;
   try {
     const decoded = verifyToken(request);
-    const { id } = params;
 
     // Connect to database
     const db = await connectDB();
