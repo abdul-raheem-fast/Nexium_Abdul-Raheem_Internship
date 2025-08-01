@@ -263,6 +263,14 @@ Each project may require specific environment variables for databases, APIs, and
 
 ---
 
+## 🤝 Connect & Collaborate
+
+- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://www.linkedin.com/in/abdul-raheem-fast)
+- **GitHub:** [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
+- **Email:** abdulraheemghauri@gmail.com
+
+---
+
 ## 📄 License
 
 MIT License - see [LICENSE](./LICENSE) file for details.

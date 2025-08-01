@@ -172,15 +172,11 @@ const getQuotesByTopic = (topic: string) => {
 - Efficient component rendering
 - Fast page transitions
 
-## 🚀 Live Application
+## 🤝 Connect & Collaborate
 
-**Live Demo:** [https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app)
-
-### **Try It Out:**
-1. Visit the live application
-2. Select a topic (Motivation, Success, Wisdom, etc.)
-3. View beautifully presented quotes
-4. Experience the smooth, responsive design
+- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://www.linkedin.com/in/abdul-raheem-fast)
+- **GitHub:** [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
+- **Email:** abdulraheemghauri@gmail.com
 
 ## 📈 Success Metrics
 

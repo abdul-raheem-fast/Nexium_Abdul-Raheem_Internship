@@ -431,6 +431,14 @@ grand-project/
 
 ---
 
+## 🤝 **Connect & Collaborate**
+
+- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://www.linkedin.com/in/abdul-raheem-fast)
+- **GitHub:** [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
+- **Email:** abdulraheemghauri@gmail.com
+
+---
+
 ## 📄 **License**
 
 This project is developed as part of the Nexium Full Stack Development Internship Program.

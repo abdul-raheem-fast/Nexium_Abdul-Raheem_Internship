@@ -4,8 +4,8 @@
 
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Supabase](https://img.shields.io/badge/Supabase-3FC85F?style=for-the-badge&logo=supabase)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
 **🎯 An enterprise-grade blog summarization platform with AI-powered analytics and real-time processing**
@@ -516,7 +516,7 @@ For questions, issues, or collaboration:
 
 - **Developer**: Muhammad Abdul Raheem Khan
 - **Program**: Nexium Internship - Blog Summarizer Platform
-- **Email**: abdulraheemghauri@gmai.com
+- **Email**: abdulraheemghauri@gmail.com
 - **LinkedIn**: https://www.linkedin.com/in/abdul-raheem-fast
 - **GitHub**: https://github.com/abdul-raheem-fast
 
