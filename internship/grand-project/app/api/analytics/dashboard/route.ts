@@ -87,8 +87,9 @@ function calculateAnalytics(moodEntries: any[]) {
   const recentAvg = last7Days.length > 0 ? last7Days.reduce((sum, entry) => sum + entry.moodScore, 0) / last7Days.length : 0;
   const previousAvg = previous7Days.length > 0 ? previous7Days.reduce((sum, entry) => sum + entry.moodScore, 0) / previous7Days.length : 0;
   
-  const improvement = previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg * 100).toFixed(0) : '0';
-  const improvementText = improvement > 0 ? `+${improvement}%` : `${improvement}%`;
+  const improvementValue = previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg * 100) : 0;
+  const improvement = improvementValue.toFixed(0);
+  const improvementText = improvementValue > 0 ? `+${improvement}%` : `${improvement}%`;
 
   // Calculate recent mood trend (last 7 days)
   const recentMoodEntries = [];
