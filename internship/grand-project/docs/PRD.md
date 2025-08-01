@@ -134,14 +134,15 @@ Create a comprehensive mental health tracking platform that empowers individuals
 ### **System Architecture**
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   API Gateway   │    │   AI Engine     │
-│   React/Next.js │◄──►│   Node.js       │◄──►│   Python/ML     │
+│   Frontend      │    │   API Routes    │    │   AI Engine     │
+│   Next.js 15    │◄──►│   Serverless    │◄──►│   OpenAI GPT-4  │
+│   App Router    │    │   Functions     │    │   Integration   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
                        ┌─────────────────┐
                        │   Database      │
-                       │   PostgreSQL    │
-                       │   + Redis Cache │
+                       │   MongoDB       │
+                       │   + Supabase    │
                        └─────────────────┘
 ```
 
@@ -155,25 +156,25 @@ Create a comprehensive mental health tracking platform that empowers individuals
 - **Mobile**: React Native (future phase)
 
 #### **Backend**
-- **API**: Node.js with Express/Fastify
-- **Database**: PostgreSQL with Prisma ORM
-- **Cache**: Redis for session and data caching
-- **Authentication**: NextAuth.js with enterprise SSO
-- **File Storage**: AWS S3 for secure document storage
+- **API**: Next.js 15 API Routes (Serverless Functions)
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: JWT with magic link authentication
+- **Email**: Nodemailer with Gmail SMTP
+- **Deployment**: Vercel serverless platform
 
 #### **AI/ML Pipeline**
-- **Framework**: Python with TensorFlow/PyTorch
-- **NLP**: OpenAI GPT-4 for text analysis
-- **Time Series**: Prophet for mood prediction
-- **Deployment**: Docker containers on AWS Lambda
-- **Monitoring**: MLflow for model performance tracking
+- **Framework**: OpenAI GPT-4 API integration
+- **NLP**: Sentiment analysis and mood pattern recognition
+- **Real-time Processing**: Instant mood analysis and insights
+- **Deployment**: Serverless functions on Vercel
+- **Monitoring**: Built-in error tracking and logging
 
 #### **Infrastructure**
-- **Hosting**: Vercel for frontend, AWS for backend
-- **Database**: AWS RDS with automated backups
-- **Monitoring**: Sentry for error tracking, Datadog for performance
-- **CI/CD**: GitHub Actions with automated testing
-- **Security**: AWS WAF, CloudFlare for DDoS protection
+- **Hosting**: Vercel for frontend and backend (serverless)
+- **Database**: MongoDB Atlas with automated backups
+- **Monitoring**: Vercel Analytics and built-in error tracking
+- **CI/CD**: Vercel with automatic deployments
+- **Security**: Vercel Edge Network and built-in security
 
 ---
 

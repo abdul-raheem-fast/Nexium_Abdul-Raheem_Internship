@@ -2,10 +2,10 @@
 
 <div align="center">
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.3-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue?style=for-the-badge&logo=typescript)
+![MongoDB](https://img.shields.io/badge/MongoDB-8.0.0-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-9.0.0-000000?style=for-the-badge&logo=jsonwebtoken)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
 🎯 **A comprehensive mental health tracking application that leverages AI to provide personalized insights, mood analysis, and wellness recommendations**
@@ -40,7 +40,7 @@ A comprehensive mental health tracking application that leverages AI to provide 
 - **Deployment**: Vercel
 
 ### **Backend**
-- **Runtime**: Node.js with Express.js
+- **Runtime**: Next.js 15 API Routes (Serverless Functions)
 - **Database**: MongoDB (MongoDB Atlas) + Supabase
 - **Authentication**: JWT with magic link verification
 - **AI Integration**: OpenAI GPT-4 API
@@ -93,23 +93,15 @@ cd internship/grand-project
 
 2. **Install dependencies**
 ```bash
-# Install frontend dependencies
-npm install
-
-# Install backend dependencies  
-cd api
+# Install all dependencies
 npm install
 ```
 
 3. **Environment Setup**
 ```bash
-# Frontend (.env.local)
-NEXT_PUBLIC_API_URL=http://localhost:5000
+# Create .env.local file
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Backend (.env)
-PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -121,20 +113,9 @@ EMAIL_APP_PASSWORD=your_gmail_app_password
 FRONTEND_URL=http://localhost:3000
 ```
 
-4. **Database Setup**
+4. **Start Development Server**
 ```bash
-# Run Prisma migrations
-cd api
-npx prisma migrate dev
-npx prisma generate
-```
-
-5. **Start Development Servers**
-```bash
-# Start backend (in api directory)
-npm run dev
-
-# Start frontend (in root directory)
+# Start Next.js development server
 npm run dev
 ```
 
@@ -142,7 +123,7 @@ npm run dev
 
 ## 📚 **API Documentation**
 
-### **Authentication Endpoints**
+### **Current API Endpoints**
 
 #### **POST /api/auth/magic-link**
 Send magic link for passwordless authentication
@@ -152,49 +133,15 @@ Send magic link for passwordless authentication
 }
 ```
 
-#### **GET /api/auth/verify?token={magicToken}**
-Verify magic link and authenticate user
+#### **GET /api/health**
+Health check endpoint
 ```json
 {
-  "success": true,
-  "user": { "id", "email", "profile" },
-  "accessToken": "jwt_token"
+  "status": "healthy",
+  "timestamp": "2025-01-01T00:00:00.000Z",
+  "version": "1.0.0"
 }
 ```
-
-### **AI Endpoints**
-
-#### **POST /api/ai/analyze-mood**
-Analyze mood entry with AI
-```json
-{
-  "moodEntryId": "entry_id",
-  "authToken": "jwt_token"
-}
-```
-
-#### **POST /api/ai/generate-insights**
-Generate personalized insights
-```json
-{
-  "authToken": "jwt_token"
-}
-```
-
-#### **POST /api/ai/recommend-activities**
-Get AI-powered activity recommendations
-```json
-{
-  "currentMood": 7,
-  "moodType": "GOOD",
-  "availableTime": 30,
-  "location": "home",
-  "energy": 8,
-  "authToken": "jwt_token"
-}
-```
-
-### **Data Endpoints**
 
 #### **POST /api/moods**
 Create new mood entry
@@ -207,18 +154,24 @@ Create new mood entry
   "stress": 4,
   "sleep": 7.5,
   "activities": ["work", "exercise"],
-  "notes": "Feeling productive today",
-  "authToken": "jwt_token"
+  "notes": "Feeling productive today"
 }
 ```
 
 #### **GET /api/moods**
-Get user's mood history
+Get mood entries
 ```json
 {
-  "authToken": "jwt_token"
+  "success": true,
+  "moodEntries": [...]
 }
 ```
+
+### **Architecture Notes**
+- **Next.js 15 API Routes**: All endpoints are serverless functions
+- **MongoDB Integration**: Direct database connection with Mongoose
+- **JWT Authentication**: Magic link system with secure tokens
+- **Vercel Deployment**: Optimized for serverless execution
 
 ---
 
@@ -319,18 +272,29 @@ Get user's mood history
 
 ## 🚀 **Deployment**
 
-### **Frontend Deployment (Vercel)**
+### **Vercel Deployment**
 ```bash
 # Build and deploy
 npm run build
 vercel --prod
 ```
 
-### **Backend Deployment (Vercel)**
-```bash
-# Deploy API routes
-vercel api --prod
-```
+### **Environment Variables (Production)**
+Set these in your Vercel dashboard:
+- `MONGODB_URI`
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+- `OPENAI_API_KEY`
+- `JWT_SECRET`
+- `JWT_MAGIC_SECRET`
+- `EMAIL_USER`
+- `EMAIL_APP_PASSWORD`
+- `FRONTEND_URL`
+
+### **Architecture Notes**
+- **Next.js 15 API Routes**: All backend functionality is now serverless functions
+- **Single Deployment**: Frontend and backend deploy together
+- **Vercel Optimized**: Built specifically for Vercel's serverless platform
 
 ### **Environment Variables (Production)**
 Set these in your Vercel dashboard:
@@ -392,18 +356,21 @@ npm run test:e2e
 ### **Project Structure**
 ```
 grand-project/
-├── app/                 # Next.js frontend
-│   ├── dashboard/       # Dashboard pages
-│   ├── mood/           # Mood tracking
-│   ├── insights/       # AI insights
-│   └── profile/        # User profile
-├── api/                # Node.js backend
-│   ├── routes/         # API endpoints
-│   ├── models/         # Database models
-│   └── lib/            # Utilities
-├── components/         # Reusable UI components
-├── lib/               # Frontend utilities
-└── docs/              # Documentation
+├── app/                 # Next.js App Router
+│   ├── api/            # API Routes (Serverless Functions)
+│   │   ├── auth/       # Authentication endpoints
+│   │   ├── health/     # Health check
+│   │   └── moods/      # Mood tracking API
+│   ├── dashboard/      # Dashboard pages
+│   ├── mood/          # Mood tracking
+│   ├── insights/      # AI insights
+│   ├── profile/       # User profile
+│   └── auth/          # Authentication pages
+├── lib/               # Utilities & Database
+│   ├── database.ts    # MongoDB connection
+│   └── models.ts      # Mongoose models
+├── components/        # Reusable UI components
+└── docs/             # Documentation
 ```
 
 ### **Code Quality**

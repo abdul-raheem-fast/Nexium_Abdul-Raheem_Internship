@@ -2,10 +2,10 @@
 
 <div align="center">
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.3-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue?style=for-the-badge&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-8.0.0-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
 🎯 **A comprehensive portfolio showcasing 3 production-ready applications built during the Nexium AI-First Web Development Internship**
@@ -36,9 +36,9 @@ Nexium_Muhammad-Abdul-Raheem-Khan_Internship/
 │   ├── assignment-2/          # ✅ Blog Summarizer & Analytics Platform (Completed)
 │   └── grand-project/         # 🚀 Mental Health Tracker - AI-Powered Wellness Platform
 │       ├── docs/              # PRD, Wireframes & Technical Documentation
-│       ├── api/               # Backend Services & AI Integration
-│       ├── app/               # Frontend Application
-│       └── ai/                # Machine Learning Models & Analytics
+│       ├── app/               # Next.js App Router (Frontend + API Routes)
+│       ├── lib/               # Database & Utilities
+│       └── components/        # Reusable UI Components
 ├── docs/                      # Learning Notes & Best Practices
 ├── resources/                 # References & Research Materials
 └── README.md                  # This file
@@ -94,7 +94,7 @@ Nexium_Muhammad-Abdul-Raheem-Khan_Internship/
 ---
 
 ### 🚀 Grand Project: Mental Health Tracker - AI-Powered Wellness Platform
-**Tech Stack:** Next.js, TypeScript, Node.js, MongoDB, Supabase, OpenAI GPT-4, JWT Authentication  
+**Tech Stack:** Next.js 15, TypeScript, MongoDB, Supabase, OpenAI GPT-4, JWT Authentication  
 **Status:** ✅ **Completed - Production Ready**
 
 **Objective:** Revolutionary mental health tracking platform that empowers individuals and organizations to proactively monitor, understand, and improve mental wellness through AI-driven insights and personalized support.
@@ -119,12 +119,13 @@ Nexium_Muhammad-Abdul-Raheem-Khan_Internship/
 
 **📋 Current Progress:**
 - ✅ **PRD & Wireframes Complete:** Comprehensive 50+ page documentation
-- ✅ **Technical Architecture:** Scalable, secure, enterprise-ready design
-- ✅ **Backend Development:** Complete API with AI integration
+- ✅ **Technical Architecture:** Next.js 15 App Router with serverless functions
+- ✅ **Backend Development:** Next.js API routes with MongoDB integration
 - ✅ **Frontend Development:** Modern Next.js application with beautiful UI
 - ✅ **AI/ML Pipeline:** OpenAI GPT-4 integration for mood analysis and insights
 - ✅ **Authentication System:** Magic link authentication with JWT tokens
-- ✅ **Database Integration:** MongoDB + Supabase dual database architecture
+- ✅ **Database Integration:** MongoDB with Mongoose ODM
+- ✅ **Deployment:** Vercel serverless deployment optimized
 - ✅ **Documentation:** Complete API docs, deployment guide, and setup instructions
 
 **🎯 Target Impact:**
@@ -134,14 +135,14 @@ Nexium_Muhammad-Abdul-Raheem-Khan_Internship/
 - **Support 1000+ enterprise users** within 6 months
 
 **Learning Outcomes:**
-- ✅ Enterprise-level full-stack development
+- ✅ Enterprise-level full-stack development with Next.js 15
 - ✅ AI/ML integration and predictive analytics
 - ✅ Healthcare compliance and data privacy considerations
-- ✅ Scalable architecture and performance optimization
+- ✅ Serverless architecture and Vercel optimization
 - ✅ Product management and comprehensive documentation
 - ✅ Real-time AI-powered mood analysis and insights
 - ✅ Secure authentication and data protection
-- ✅ Production deployment and CI/CD practices
+- ✅ Production deployment with serverless functions
 
 ---
 
@@ -226,6 +227,9 @@ pnpm dev
 
 # For Grand Project (Mental Health Tracker)
 cd Nexium_Muhammad-Abdul-Raheem-Khan_Internship/internship/grand-project
+npm install
+# Set up environment variables in .env.local
+npm run dev
 # View comprehensive documentation
 cat docs/PRD.md
 cat docs/wireframes.md
