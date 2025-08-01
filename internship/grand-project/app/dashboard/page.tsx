@@ -27,6 +27,7 @@ function DashboardPage() {
         console.log('Dashboard analytics data received:', analyticsData);
         console.log('Recent mood entries:', analyticsData?.recentMood?.entries);
         console.log('Entries length:', analyticsData?.recentMood?.entries?.length);
+        // Handle the API response structure
         setAnalytics(analyticsData);
         setAIInsights(aiData);
         setError('');
@@ -261,7 +262,7 @@ function DashboardPage() {
                    </button>
                  </div>
                </div>
-              {analytics?.recentMood?.entries?.length ? (
+              {analytics?.recentMood?.entries && analytics.recentMood.entries.length > 0 ? (
                 <div className="w-full h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.recentMood.entries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
@@ -283,7 +284,15 @@ function DashboardPage() {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              ) : analytics?.moodStats ? (
+              ) : (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">📊</div>
+                    <p>No mood data available for chart</p>
+                    <p className="text-sm">Start tracking your mood to see trends</p>
+                  </div>
+                </div>
+              )}
                 <div className="flex flex-col gap-3 p-4 bg-neutral-50 rounded-lg">
                   <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
                     <span className="text-neutral-700">Average Mood:</span>

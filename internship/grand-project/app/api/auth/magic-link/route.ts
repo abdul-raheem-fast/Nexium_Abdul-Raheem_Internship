@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           <!-- Footer -->
           <div style="text-align: center; padding: 20px 0; border-top: 1px solid #e5e7eb;">
             <p style="margin: 0 0 10px 0; font-size: 14px; color: #6b7280;">
-              Need help? Contact us at <a href="mailto:support@mentalhealthtracker.com" style="color: #3b82f6;">support@mentalhealthtracker.com</a>
+              Need help? Contact us at <a href="mailto:abdulraheemghauri@gmail.com" style="color: #3b82f6;">abdulraheemghauri@gmail.com</a>
             </p>
             <p style="margin: 0; font-size: 12px; color: #9ca3af;">
               © 2025 Mental Health Tracker. All rights reserved.

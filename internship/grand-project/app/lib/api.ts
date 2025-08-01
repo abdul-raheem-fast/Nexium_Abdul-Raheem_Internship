@@ -158,7 +158,10 @@ export function deleteMoodEntry(id: string) {
 
 // Analytics APIs
 export function getDashboardAnalytics() {
-  return fetchWithAuth(`${API_BASE}/analytics/dashboard`);
+  return fetchWithAuth(`${API_BASE}/analytics/dashboard`).then(response => {
+    // Return the response directly as it should already be in the correct format
+    return response;
+  });
 }
 
 // AI APIs

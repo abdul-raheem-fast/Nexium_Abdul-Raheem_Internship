@@ -31,11 +31,13 @@ function MoodHistoryPage() {
   const loadMoodEntries = async () => {
     try {
       setLoading(true);
-      const data = await getMoodEntries();
-      // Ensure data is always an array
+      const response = await getMoodEntries();
+      // Handle the API response structure
+      const data = response.moodEntries || response || [];
       setMoodEntries(Array.isArray(data) ? data : []);
       setError('');
     } catch (err: any) {
+      console.error('Mood history error:', err);
       setError(err.message || 'Failed to load mood entries');
       setMoodEntries([]); // Set empty array on error
     } finally {

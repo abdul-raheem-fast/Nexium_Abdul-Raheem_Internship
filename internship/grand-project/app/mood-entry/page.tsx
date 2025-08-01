@@ -68,11 +68,10 @@ function MoodEntryPage() {
         moodType: getMoodType(selectedMood),
         activities: selectedActivities,
         notes,
-        sleep: sleepHours, // Changed from sleepHours to sleep
+        sleep: sleepHours,
         energy: 5, // Default values for required fields
         anxiety: 3,
         stress: 3,
-        date: new Date().toISOString(),
       });
       
       setSuccess(true);
