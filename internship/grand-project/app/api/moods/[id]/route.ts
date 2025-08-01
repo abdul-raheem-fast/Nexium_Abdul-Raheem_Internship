@@ -24,8 +24,9 @@ function verifyToken(request: NextRequest) {
 // GET - Get specific mood entry
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const decoded = verifyToken(request);
     const { id } = params;
@@ -102,11 +103,11 @@ export async function GET(
 // PUT - Update mood entry
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const decoded = verifyToken(request);
-    const { id } = params;
     const body = await request.json();
 
     // Connect to database
@@ -168,11 +169,11 @@ export async function PUT(
 // DELETE - Delete mood entry
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const decoded = verifyToken(request);
-    const { id } = params;
 
     // Connect to database
     const db = await connectDB();
