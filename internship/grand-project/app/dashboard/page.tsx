@@ -293,36 +293,6 @@ function DashboardPage() {
                   </div>
                 </div>
               )}
-                <div className="flex flex-col gap-3 p-4 bg-neutral-50 rounded-lg">
-                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
-                    <span className="text-neutral-700">Average Mood:</span>
-                    <span className="font-semibold text-primary-blue">{analytics.moodStats.avgMood}/10</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
-                    <span className="text-neutral-700">Best Day:</span>
-                    <span className="font-semibold text-primary-teal">{analytics.moodStats.bestDay}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2 border-b border-neutral-200 pb-2">
-                    <span className="text-neutral-700">Worst Day:</span>
-                    <span className="font-semibold text-secondary-orange">{analytics.moodStats.worstDay}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-2">
-                    <span className="text-neutral-700">Total Entries:</span>
-                    <span className="font-semibold text-secondary-purple">{analytics.moodStats.totalEntries}</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-64 bg-neutral-50 rounded-lg">
-                  <FiBarChart2 className="h-12 w-12 text-neutral-300 mb-3" />
-                  <p className="text-neutral-500 font-medium">No mood data available yet</p>
-                                     <button 
-                     onClick={handleNewEntry}
-                     className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                   >
-                     Add your first entry
-                   </button>
-                </div>
-              )}
             </div>
 
             <div className="bg-white rounded-xl shadow p-6">
