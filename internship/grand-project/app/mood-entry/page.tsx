@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FiSave, FiX, FiAlertCircle, FiCheckCircle } from 'react-icons/fi';
 import withAuth from '../lib/withAuth';
 import { postMoodEntry } from '../lib/api';
+import { useToast } from '../components/Toast';
 import { useRouter } from 'next/navigation';
 
 const moodOptions = [
@@ -34,6 +35,7 @@ function MoodEntryPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const { showToast } = useToast();
 
   const handleActivityToggle = (activityId: string) => {
     setSelectedActivities(prev => 
@@ -74,24 +76,15 @@ function MoodEntryPage() {
         stress: 3,
       });
       
-      setSuccess(true);
+      showToast('success', 'Mood entry saved successfully!');
       
-      // Redirect to dashboard after 2 seconds to show updated entries
+      // Redirect to dashboard after 1 second
       setTimeout(() => {
         router.push('/dashboard');
-      }, 2000);
-      
-      // Reset form after 2 seconds
-      setTimeout(() => {
-        setSelectedMood(null);
-        setSelectedActivities([]);
-        setNotes('');
-        setSleepHours(7);
-        setSuccess(false);
-      }, 2000);
+      }, 1000);
       
     } catch (err: any) {
-      setError(err.message || 'Failed to save mood entry');
+      showToast('error', err.message || 'Failed to save mood entry');
     } finally {
       setLoading(false);
     }

@@ -144,29 +144,58 @@ export async function PUT(
     const body = await request.json();
 
     // Connect to database
-    const db = await connectDB();
-
-    // Find and update mood entry
-    const updatedEntry = await MoodEntry.findOneAndUpdate(
-      { _id: id, userId: userId },
-      {
-        ...body,
-        updatedAt: new Date(),
-      },
-      { new: true }
-    ).exec();
-
-    if (!updatedEntry) {
+    try {
+      await connectDB();
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
       return NextResponse.json(
-        { error: 'Mood entry not found' },
-        { status: 404 }
+        { error: "Database connection failed" },
+        { status: 500 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      moodEntry: updatedEntry,
-    });
+    // Check if the ID is a fallback ID (like "entry-1")
+    if (id.startsWith('entry-')) {
+      return NextResponse.json({
+        success: true,
+        moodEntry: {
+          id: id,
+          userId: userId,
+          ...body,
+          updatedAt: new Date().toISOString()
+        },
+      });
+    }
+
+    // Find and update mood entry
+    try {
+      const updatedEntry = await MoodEntry.findOneAndUpdate(
+        { _id: id, userId: userId },
+        {
+          ...body,
+          updatedAt: new Date(),
+        },
+        { new: true }
+      ).exec();
+
+      if (!updatedEntry) {
+        return NextResponse.json(
+          { error: 'Mood entry not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        moodEntry: updatedEntry,
+      });
+    } catch (dbError) {
+      console.error("Database query error:", dbError);
+      return NextResponse.json(
+        { error: 'Invalid mood entry ID or database error' },
+        { status: 400 }
+      );
+    }
 
   } catch (error: any) {
     console.error('Update mood entry error:', error);
@@ -210,25 +239,49 @@ export async function DELETE(
     const userId = getUserId(decoded);
 
     // Connect to database
-    const db = await connectDB();
-
-    // Find and delete mood entry
-    const deletedEntry = await MoodEntry.findOneAndDelete({
-      _id: id,
-      userId: userId
-    }).exec();
-
-    if (!deletedEntry) {
+    try {
+      await connectDB();
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
       return NextResponse.json(
-        { error: 'Mood entry not found' },
-        { status: 404 }
+        { error: "Database connection failed" },
+        { status: 500 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Mood entry deleted successfully',
-    });
+    // Check if the ID is a fallback ID (like "entry-1")
+    if (id.startsWith('entry-')) {
+      return NextResponse.json({
+        success: true,
+        message: 'Mock mood entry deleted successfully',
+      });
+    }
+
+    // Find and delete mood entry
+    try {
+      const deletedEntry = await MoodEntry.findOneAndDelete({
+        _id: id,
+        userId: userId
+      }).exec();
+
+      if (!deletedEntry) {
+        return NextResponse.json(
+          { error: 'Mood entry not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Mood entry deleted successfully',
+      });
+    } catch (dbError) {
+      console.error("Database query error:", dbError);
+      return NextResponse.json(
+        { error: 'Invalid mood entry ID or database error' },
+        { status: 400 }
+      );
+    }
 
   } catch (error: any) {
     console.error('Delete mood entry error:', error);

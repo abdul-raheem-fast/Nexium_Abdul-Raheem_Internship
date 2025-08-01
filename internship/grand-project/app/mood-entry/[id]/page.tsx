@@ -4,11 +4,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getMoodEntry, deleteMoodEntry } from '../../lib/api';
 import withAuth from '../../lib/withAuth';
+import { useToast } from '../../components/Toast';
 import { FiArrowLeft, FiCalendar, FiActivity, FiFileText, FiEdit, FiTrash2 } from 'react-icons/fi';
 
 function MoodEntryDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { showToast } = useToast();
   const [entry, setEntry] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -57,13 +59,12 @@ function MoodEntryDetailPage() {
   };
 
   const handleDelete = async () => {
-    if (confirm('Are you sure you want to delete this mood entry?')) {
-      try {
-        await deleteMoodEntry(entry.id);
-        router.push('/dashboard');
-      } catch (err: any) {
-        setError(err.message || 'Failed to delete mood entry');
-      }
+    try {
+      await deleteMoodEntry(entry.id);
+      showToast('success', 'Mood entry deleted successfully');
+      router.push('/dashboard');
+    } catch (err: any) {
+      showToast('error', err.message || 'Failed to delete mood entry');
     }
   };
 
