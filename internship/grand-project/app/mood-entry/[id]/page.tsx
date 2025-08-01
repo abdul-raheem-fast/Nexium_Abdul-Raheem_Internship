@@ -55,15 +55,17 @@ function MoodEntryDetailPage() {
 
   const handleEdit = () => {
     // Navigate to edit page (could be the same as mood-entry with pre-filled data)
-    router.push(`/mood-entry?edit=${entry.id}`);
+    router.push(`/mood-entry?edit=${entry._id || entry.id}`);
   };
 
   const handleDelete = async () => {
     try {
-      await deleteMoodEntry(entry.id);
+      console.log('Deleting mood entry with ID:', entry._id || entry.id);
+      await deleteMoodEntry(entry._id || entry.id);
       showToast('success', 'Mood entry deleted successfully');
       router.push('/dashboard');
     } catch (err: any) {
+      console.error('Delete error:', err);
       showToast('error', err.message || 'Failed to delete mood entry');
     }
   };

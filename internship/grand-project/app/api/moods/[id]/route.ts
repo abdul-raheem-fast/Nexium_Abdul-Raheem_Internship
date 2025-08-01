@@ -234,9 +234,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  console.log(`DELETE request for mood entry ID: ${id}`);
+  
   try {
     const decoded = verifyToken(request);
     const userId = getUserId(decoded);
+    console.log(`User ID from token: ${userId}`);
 
     // Connect to database
     try {
@@ -259,18 +262,22 @@ export async function DELETE(
 
     // Find and delete mood entry
     try {
+      console.log(`Attempting to delete mood entry with ID: ${id} for user: ${userId}`);
+      
       const deletedEntry = await MoodEntry.findOneAndDelete({
         _id: id,
         userId: userId
       }).exec();
 
       if (!deletedEntry) {
+        console.log(`No mood entry found with ID: ${id} for user: ${userId}`);
         return NextResponse.json(
           { error: 'Mood entry not found' },
           { status: 404 }
         );
       }
 
+      console.log(`Successfully deleted mood entry: ${id}`);
       return NextResponse.json({
         success: true,
         message: 'Mood entry deleted successfully',
@@ -278,7 +285,7 @@ export async function DELETE(
     } catch (dbError) {
       console.error("Database query error:", dbError);
       return NextResponse.json(
-        { error: 'Invalid mood entry ID or database error' },
+        { error: `Database error: ${dbError.message}` },
         { status: 400 }
       );
     }

@@ -11,7 +11,7 @@
 
 ✅ **COMPLETED & DEPLOYED**
 
-[**🌟 Live Demo**](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app) | [**📊 View Code**](https://github.com/abdul-raheem-fast)
+[**🌟 Live Demo**](https://nexium-quote-generator-ten.vercel.app/) | [**📊 View Code**](https://github.com/abdul-raheem-fast)
 
 </div>
 

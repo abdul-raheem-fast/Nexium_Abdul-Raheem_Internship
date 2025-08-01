@@ -12,7 +12,7 @@
 
 ✅ **COMPLETED & DEPLOYED**
 
-[**🌟 Live Demo**](https://nexium-muhammad-abdul-raheem-khan-grand-project.vercel.app) | [**📊 Dashboard**](https://nexium-muhammad-abdul-raheem-khan-grand-project.vercel.app/dashboard) | [**🔗 Webhooks**](https://nexium-muhammad-abdul-raheem-khan-grand-project.vercel.app/webhooks)
+[**🌟 Live Demo**](https://nexium-mental-health-tracker.vercel.app/) | [**📊 Dashboard**](https://nexium-mental-health-tracker.vercel.app/dashboard) | [**🔗 Webhooks**](https://nexium-mental-health-tracker.vercel.app/webhooks)
 
 </div>
 

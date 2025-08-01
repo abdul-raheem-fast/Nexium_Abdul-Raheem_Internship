@@ -12,7 +12,7 @@
 
 **✅ COMPLETED & DEPLOYED**
 
-[**🌟 Live Demo**](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app) | [**📊 Analytics Dashboard**](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app/analytics) | [**🔗 Webhooks**](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app/webhooks)
+[**🌟 Live Demo**](https://nexium-blog-summarizer-zeta.vercel.app/) | [**📊 Analytics Dashboard**](https://nexium-blog-summarizer-zeta.vercel.app/analytics) | [**🔗 Webhooks**](https://nexium-blog-summarizer-zeta.vercel.app/webhooks)
 
 </div>
 
@@ -398,7 +398,7 @@ vercel --prod
 NEXT_PUBLIC_SUPABASE_URL=your_production_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_key
 MONGODB_URI=your_production_mongodb_uri
-NEXTAUTH_URL=https://your-domain.vercel.app
+NEXTAUTH_URL=https://nexium-blog-summarizer-zeta.vercel.app
 ```
 
 ## 📊 Analytics Dashboard

@@ -12,7 +12,7 @@
 
 ✅ **COMPLETED & DEPLOYED**
 
-[**🌟 Assignment 1**](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app) | [**📊 Assignment 2**](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app) | [**🧠 Grand Project**](https://mental-health-tracker-ai.vercel.app)
+[**🌟 Assignment 1**](https://nexium-quote-generator-ten.vercel.app/) | [**📊 Assignment 2**](https://nexium-blog-summarizer-zeta.vercel.app/) | [**🧠 Grand Project**](https://nexium-mental-health-tracker.vercel.app/)
 
 </div>
 
