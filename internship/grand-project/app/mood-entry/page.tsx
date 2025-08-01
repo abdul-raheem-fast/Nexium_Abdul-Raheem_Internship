@@ -44,7 +44,7 @@ function MoodEntryPage() {
   };
 
   const getMoodType = (score: number): string => {
-    if (score >= 9) return 'GREAT'; // Changed from 'EXCELLENT' to 'GREAT'
+    if (score >= 9) return 'EXCELLENT';
     if (score >= 7) return 'GOOD';
     if (score >= 5) return 'OKAY';
     if (score >= 3) return 'BAD';

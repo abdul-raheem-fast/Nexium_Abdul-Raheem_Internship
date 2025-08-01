@@ -21,6 +21,12 @@ function verifyToken(request: NextRequest) {
   return decoded;
 }
 
+// Helper function to get user ID from token
+function getUserId(decoded: any): string {
+  // Handle both userId and email fields for backward compatibility
+  return decoded.userId || decoded.email || "";
+}
+
 // GET - Get specific mood entry
 export async function GET(
   request: NextRequest,
@@ -29,6 +35,7 @@ export async function GET(
   const { id } = await params;
   try {
     const decoded = verifyToken(request);
+    const userId = getUserId(decoded);
 
     // Connect to database
     const db = await connectDB();
@@ -36,14 +43,14 @@ export async function GET(
     // Find mood entry by ID and user
     const moodEntry = await MoodEntry.findOne({ 
       _id: id, 
-      userId: decoded.email 
+      userId: userId 
     }).exec();
 
     if (!moodEntry) {
       // Return mock data for demo purposes
       const mockEntry = {
         id: id,
-        userId: decoded.email,
+        userId: userId,
         moodScore: 8,
         moodType: 'GOOD',
         energy: 7,
@@ -107,6 +114,7 @@ export async function PUT(
   const { id } = await params;
   try {
     const decoded = verifyToken(request);
+    const userId = getUserId(decoded);
     const body = await request.json();
 
     // Connect to database
@@ -114,7 +122,7 @@ export async function PUT(
 
     // Find and update mood entry
     const updatedEntry = await MoodEntry.findOneAndUpdate(
-      { _id: id, userId: decoded.email },
+      { _id: id, userId: userId },
       {
         ...body,
         updatedAt: new Date(),
@@ -173,6 +181,7 @@ export async function DELETE(
   const { id } = await params;
   try {
     const decoded = verifyToken(request);
+    const userId = getUserId(decoded);
 
     // Connect to database
     const db = await connectDB();
@@ -180,7 +189,7 @@ export async function DELETE(
     // Find and delete mood entry
     const deletedEntry = await MoodEntry.findOneAndDelete({
       _id: id,
-      userId: decoded.email
+      userId: userId
     }).exec();
 
     if (!deletedEntry) {

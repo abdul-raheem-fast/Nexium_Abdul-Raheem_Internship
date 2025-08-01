@@ -124,11 +124,9 @@ export function postMoodEntry(data: any) {
       energy: parseInt(data.energy || 5),
       anxiety: parseInt(data.anxiety || 3),
       stress: parseInt(data.stress || 3),
-      sleep: parseInt(data.sleep || 7),
+      sleep: parseFloat(data.sleep || 7), // Keep as float for precision, API will round
       activities: data.activities || [],
-      tags: data.tags || [],
       notes: data.notes || '',
-      entryMethod: 'MANUAL'
     }),
   });
 }
