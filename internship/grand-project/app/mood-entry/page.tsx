@@ -64,17 +64,21 @@ function MoodEntryPage() {
     setLoading(true);
     setError('');
     
+    const moodData = {
+      moodScore: selectedMood,
+      moodType: getMoodType(selectedMood),
+      activities: selectedActivities,
+      notes,
+      sleep: sleepHours,
+      energy: 5, // Default values for required fields
+      anxiety: 3,
+      stress: 3,
+    };
+    
+    console.log('Submitting mood data:', moodData);
+    
     try {
-      await postMoodEntry({
-        moodScore: selectedMood,
-        moodType: getMoodType(selectedMood),
-        activities: selectedActivities,
-        notes,
-        sleep: sleepHours,
-        energy: 5, // Default values for required fields
-        anxiety: 3,
-        stress: 3,
-      });
+      await postMoodEntry(moodData);
       
       showToast('success', 'Mood entry saved successfully!');
       
@@ -84,6 +88,7 @@ function MoodEntryPage() {
       }, 1000);
       
     } catch (err: any) {
+      console.error('Mood entry submission error:', err);
       showToast('error', err.message || 'Failed to save mood entry');
     } finally {
       setLoading(false);

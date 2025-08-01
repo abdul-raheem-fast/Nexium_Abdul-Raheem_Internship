@@ -113,26 +113,29 @@ function DashboardPage() {
       switch (range) {
         case 'week':
           filteredEntries = filteredEntries.filter(entry => {
-            const entryDate = new Date(entry.date);
+            // Chart data uses 'date' field in YYYY-MM-DD format
+            const entryDate = new Date(entry.date + 'T00:00:00');
             const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
             return entryDate >= weekAgo;
           });
           break;
         case 'month':
           filteredEntries = filteredEntries.filter(entry => {
-            const entryDate = new Date(entry.date);
+            const entryDate = new Date(entry.date + 'T00:00:00');
             const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
             return entryDate >= monthAgo;
           });
           break;
         case 'year':
           filteredEntries = filteredEntries.filter(entry => {
-            const entryDate = new Date(entry.date);
+            const entryDate = new Date(entry.date + 'T00:00:00');
             const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
             return entryDate >= yearAgo;
           });
           break;
       }
+      
+      console.log(`Filtered entries for ${range}:`, filteredEntries);
       
       // Update analytics with filtered data
       setAnalytics(prev => ({
@@ -300,28 +303,32 @@ function DashboardPage() {
                    </button>
                  </div>
                </div>
-              {analytics?.recentMood?.entries && analytics.recentMood.entries.length > 0 ? (
-                <div className="w-full h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={analytics.recentMood.entries} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                      <YAxis domain={[1, 10]} tickCount={5} tick={{ fontSize: 12 }} />
-                      <Tooltip 
-                        contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none' }}
-                        labelStyle={{ fontWeight: 'bold', color: '#333' }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="mood" 
-                        stroke="#2563eb" 
-                        strokeWidth={3} 
-                        dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }} 
-                        activeDot={{ r: 6, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
+                             {analytics?.recentMood?.entries && analytics.recentMood.entries.length > 0 ? (
+                 <div className="w-full h-64">
+                   <ResponsiveContainer width="100%" height="100%">
+                     <LineChart 
+                       key={`${timeRange}-${analytics.recentMood.entries.length}`}
+                       data={analytics.recentMood.entries} 
+                       margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
+                     >
+                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                       <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                       <YAxis domain={[1, 10]} tickCount={5} tick={{ fontSize: 12 }} />
+                       <Tooltip 
+                         contentStyle={{ borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', border: 'none' }}
+                         labelStyle={{ fontWeight: 'bold', color: '#333' }}
+                       />
+                       <Line 
+                         type="monotone" 
+                         dataKey="mood" 
+                         stroke="#2563eb" 
+                         strokeWidth={3} 
+                         dot={{ r: 4, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }} 
+                         activeDot={{ r: 6, fill: '#2563eb', strokeWidth: 2, stroke: '#fff' }}
+                       />
+                     </LineChart>
+                   </ResponsiveContainer>
+                 </div>
               ) : (
                 <div className="flex items-center justify-center h-64 text-gray-500">
                   <div className="text-center">

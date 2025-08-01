@@ -6,6 +6,9 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const token = localStorage.getItem('accessToken');
+  console.log('fetchWithAuth - Token available:', !!token);
+  console.log('fetchWithAuth - URL:', url);
+  
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -57,7 +60,8 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   
   if (!res.ok) {
     const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || 'API error');
+    console.error('API error response:', { status: res.status, error });
+    throw new Error(error.message || `API error (${res.status})`);
   }
   return res.json();
 }
@@ -112,22 +116,29 @@ export function getMoodEntries() {
 }
 
 export function postMoodEntry(data: any) {
+  const payload = {
+    ...data,
+    // Ensure numeric values are sent as numbers, not strings
+    moodScore: parseInt(data.moodScore),
+    energy: parseInt(data.energy || 5),
+    anxiety: parseInt(data.anxiety || 3),
+    stress: parseInt(data.stress || 3),
+    sleep: parseFloat(data.sleep || 7), // Keep as float for precision, API will round
+    activities: data.activities || [],
+    notes: data.notes || '',
+  };
+  
+  console.log('postMoodEntry payload:', payload);
+  
   return fetchWithAuth(`${API_BASE}/moods`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      ...data,
-      // Ensure numeric values are sent as numbers, not strings
-      moodScore: parseInt(data.moodScore),
-      energy: parseInt(data.energy || 5),
-      anxiety: parseInt(data.anxiety || 3),
-      stress: parseInt(data.stress || 3),
-      sleep: parseFloat(data.sleep || 7), // Keep as float for precision, API will round
-      activities: data.activities || [],
-      notes: data.notes || '',
-    }),
+    body: JSON.stringify(payload),
+  }).catch(error => {
+    console.error('postMoodEntry API error:', error);
+    throw error;
   });
 }
 
