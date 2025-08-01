@@ -12,7 +12,7 @@ export default function withAuth<P>(Component: React.ComponentType<P>) {
           const accessToken = localStorage.getItem('accessToken');
           
           if (!accessToken) {
-            // Only redirect if we're not already on the login page
+            // Only redirect if we're not already on the login page or verification page
             if (window.location.pathname !== '/login' && window.location.pathname !== '/auth/verify') {
               window.location.href = '/login';
             }
@@ -25,7 +25,26 @@ export default function withAuth<P>(Component: React.ComponentType<P>) {
         }
       };
 
+      // Initial auth check
       checkAuth();
+
+      // Listen for auth changes (when tokens are stored after verification)
+      const handleAuthChange = () => {
+        checkAuth();
+      };
+
+      // Listen for storage changes (when localStorage is updated)
+      const handleStorageChange = () => {
+        checkAuth();
+      };
+
+      window.addEventListener('authChange', handleAuthChange);
+      window.addEventListener('storage', handleStorageChange);
+
+      return () => {
+        window.removeEventListener('authChange', handleAuthChange);
+        window.removeEventListener('storage', handleStorageChange);
+      };
     }, []);
 
     // Show loading state while checking authentication

@@ -35,13 +35,19 @@ function VerifyContent() {
         setStatus('success');
         setMessage('Successfully signed in! Redirecting to dashboard...');
         
-        // Trigger auth change event and redirect
+        // Trigger auth change event to notify other components
         window.dispatchEvent(new Event('authChange'));
         
-        // Redirect to dashboard after a brief delay
+        // Also trigger storage event for cross-tab synchronization
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'accessToken',
+          newValue: response.tokens.accessToken
+        }));
+        
+        // Redirect to dashboard after a brief delay to ensure tokens are stored
         setTimeout(() => {
           window.location.replace('/dashboard');
-        }, 800);
+        }, 1000);
         
       } catch (error: any) {
         setStatus('error');
