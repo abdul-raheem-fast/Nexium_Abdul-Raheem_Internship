@@ -143,8 +143,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate mood type
-    const validMoodTypes = ['EXCELLENT', 'GREAT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE'];
+    // Validate mood type - accept all mood types from the frontend form
+    const validMoodTypes = [
+      'GREAT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE', 'EXCITED', 'CALM', 'ANXIOUS', 'SAD', 'ANGRY', 'CONFUSED', 'GRATEFUL', 'HOPEFUL'
+    ];
     if (!validMoodTypes.includes(moodType)) {
       return NextResponse.json(
         { error: "Invalid mood type" },

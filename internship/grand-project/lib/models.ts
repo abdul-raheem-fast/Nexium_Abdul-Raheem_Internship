@@ -13,7 +13,7 @@ const moodEntrySchema = new mongoose.Schema({
   },
   moodType: {
     type: String,
-    enum: ['EXCELLENT', 'GREAT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE'],
+    enum: ['GREAT', 'GOOD', 'OKAY', 'BAD', 'TERRIBLE', 'EXCITED', 'CALM', 'ANXIOUS', 'SAD', 'ANGRY', 'CONFUSED', 'GRATEFUL', 'HOPEFUL'],
     required: true,
   },
   energy: {
