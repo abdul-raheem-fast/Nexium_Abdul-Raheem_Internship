@@ -1,4 +1,4 @@
-# 🎯 Assignment 1: Quote Generator Web App
+# 🎯 Quote Generator Web App
 
 <div align="center">
 
@@ -7,7 +7,9 @@
 ![ShadCN UI](https://img.shields.io/badge/ShadCN-UI-purple?style=for-the-badge)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
-**✅ COMPLETED & DEPLOYED**
+🎯 **A modern, responsive quote generator web application with intelligent topic-based selection and beautiful UI**
+
+✅ **COMPLETED & DEPLOYED**
 
 [**🌟 Live Demo**](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app) | [**📊 View Code**](https://github.com/abdul-raheem-fast)
 

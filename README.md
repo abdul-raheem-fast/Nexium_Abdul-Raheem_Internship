@@ -1,23 +1,20 @@
-# Nexium AI-First Web Development Internship
+# 🚀 Nexium AI-First Web Development Internship Portfolio
 
-**Student:** Muhammad Abdul Raheem Khan  
-**Program:** 30-Day AI-First Web Development Internship  
-**Institution:** Nexium  
+<div align="center">
 
----
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel)
 
-## 🚀 Live Deployments
+🎯 **A comprehensive portfolio showcasing 3 production-ready applications built during the Nexium AI-First Web Development Internship**
 
-### Assignment 1: Quote Generator Web App
-**Live Demo:** [View Assignment 1](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app)
+✅ **COMPLETED & DEPLOYED**
 
-### Assignment 2: Blog Summarizer & Analytics Platform  
-**Live Demo:** [View Assignment 2](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app)
+[**🌟 Assignment 1**](https://nexium-muhammad-abdul-raheem-khan-i-rho.vercel.app) | [**📊 Assignment 2**](https://nexium-muhammad-abdul-raheem-khan-i.vercel.app) | [**🧠 Grand Project**](https://mental-health-tracker-ai.vercel.app)
 
-### Grand Project: Mental Health Tracker - AI-Powered Wellness Platform
-**Live Demo:** [View Grand Project](https://mental-health-tracker-ai.vercel.app)  
-
----
+</div>
 
 ## 🎯 Program Overview
 
@@ -263,14 +260,6 @@ Each project may require specific environment variables for databases, APIs, and
 - ✅ **Industry Impact** potential with solutions addressing real-world business needs
 - ✅ **AI Integration Expertise** with practical OpenAI implementation
 - ✅ **Full-Stack Mastery** from frontend to backend with modern technologies
-
----
-
-## 🤝 Connect & Collaborate
-
-- **LinkedIn:** [Muhammad Abdul Raheem Khan](https://www.linkedin.com/in/abdul-raheem-fast)
-- **GitHub:** [@abdul-raheem-fast](https://github.com/abdul-raheem-fast)
-- **Email:** abdulraheemghauri@gmail.com
 
 ---
 
