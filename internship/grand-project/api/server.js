@@ -132,13 +132,8 @@ app.get('/health', async (req, res) => {
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import moodRoutes from './routes/moods.js';
-import journalRoutes from './routes/journals.js';
-import activityRoutes from './routes/activities.js';
-import goalRoutes from './routes/goals.js';
-import insightRoutes from './routes/insights.js';
+import featuresRoutes from './routes/features.js';
 import analyticsRoutes from './routes/analytics.js';
-import notificationRoutes from './routes/notifications.js';
-import crisisRoutes from './routes/crisis.js';
 import aiRoutes from './routes/ai.js';
 import webhookRoutes from './routes/webhooks.js';
 
@@ -146,13 +141,8 @@ import webhookRoutes from './routes/webhooks.js';
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/moods', moodRoutes);
-app.use('/api/journals', journalRoutes);
-app.use('/api/activities', activityRoutes);
-app.use('/api/goals', goalRoutes);
-app.use('/api/insights', insightRoutes);
+app.use('/api/features', featuresRoutes);
 app.use('/api/analytics', analyticsRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/crisis', crisisRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/webhooks', webhookRoutes);
 
