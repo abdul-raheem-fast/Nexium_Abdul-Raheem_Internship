@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const verificationUrl = `${process.env.FRONTEND_URL}/auth/verify?token=${magicToken}`;
 
     // Send email
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,

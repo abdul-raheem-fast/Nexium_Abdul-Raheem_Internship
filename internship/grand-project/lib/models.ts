@@ -44,4 +44,4 @@ const moodEntrySchema = new mongoose.Schema({
   },
 });
 
-export const MoodEntry = mongoose.models.MoodEntry || mongoose.model('MoodEntry', moodEntrySchema); 
+export const MoodEntry = mongoose.models.MoodEntry || mongoose.model('MoodEntry', moodEntrySchema) as any; 

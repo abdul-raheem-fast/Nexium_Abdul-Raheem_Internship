@@ -45,9 +45,7 @@ export async function GET(request: NextRequest) {
     const db = await connectDB();
 
     // Get mood entries
-    const moodEntries = await MoodEntry.find()
-      .sort({ createdAt: -1 })
-      .limit(50);
+    const moodEntries = await MoodEntry.find().exec();
 
     return NextResponse.json({
       success: true,
