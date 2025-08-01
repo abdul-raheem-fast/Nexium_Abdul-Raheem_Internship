@@ -176,7 +176,7 @@ function MoodHistoryPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <button
-                          onClick={() => handleViewEntryDetails(entry.id || `entry-${index}`)}
+                          onClick={() => handleViewEntryDetails(entry._id || entry.id || `entry-${index}`)}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
                         >
                           View Details

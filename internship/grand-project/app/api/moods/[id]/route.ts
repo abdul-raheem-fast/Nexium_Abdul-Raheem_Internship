@@ -38,16 +38,21 @@ export async function GET(
     const userId = getUserId(decoded);
 
     // Connect to database
-    const db = await connectDB();
+    try {
+      await connectDB();
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 }
+      );
+    }
 
-    // Find mood entry by ID and user
-    const moodEntry = await MoodEntry.findOne({ 
-      _id: id, 
-      userId: userId 
-    }).exec();
-
-    if (!moodEntry) {
-      // Return mock data for demo purposes
+    // Check if the ID is a fallback ID (like "entry-1") or a real MongoDB ID
+    let moodEntry;
+    
+    if (id.startsWith('entry-')) {
+      // This is a fallback ID, return mock data
       const mockEntry = {
         id: id,
         userId: userId,
@@ -68,6 +73,27 @@ export async function GET(
         success: true,
         moodEntry: mockEntry,
       });
+    } else {
+      // This is a real MongoDB ID, try to find the entry
+      try {
+        moodEntry = await MoodEntry.findOne({ 
+          _id: id, 
+          userId: userId 
+        }).exec();
+
+        if (!moodEntry) {
+          return NextResponse.json(
+            { error: 'Mood entry not found' },
+            { status: 404 }
+          );
+        }
+      } catch (dbError) {
+        console.error("Database query error:", dbError);
+        return NextResponse.json(
+          { error: 'Invalid mood entry ID or database error' },
+          { status: 400 }
+        );
+      }
     }
 
     return NextResponse.json({

@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   title: "Nexium Dashboard - Modern UI with ShadCN",
   description: "A professional dashboard built with Next.js 15, ShadCN UI, and Tailwind CSS. Showcasing modern theming, responsive design, and advanced UI components.",
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
   },
 };
 

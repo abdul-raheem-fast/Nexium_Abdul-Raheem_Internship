@@ -26,7 +26,12 @@ function MoodEntryDetailPage() {
       setEntry(response.moodEntry);
       setError('');
     } catch (err: any) {
-      setError(err.message || 'Failed to load mood entry');
+      console.error('Error loading mood entry:', err);
+      if (err.message.includes('API error')) {
+        setError('Unable to load mood entry details. Please try again later.');
+      } else {
+        setError(err.message || 'Failed to load mood entry');
+      }
     } finally {
       setLoading(false);
     }
